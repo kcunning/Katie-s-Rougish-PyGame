@@ -8,23 +8,27 @@ WHITE = (255, 255, 255)
 TILES_ACROSS = 20
 TILES_DOWN = 15
 
+class Treasure(object):
+	def __init__(self):
+		pass
+
 class Map(object):
 	def __init__(self):
-		self.map = []
+		self.cleared = []
 		for i in range(TILES_ACROSS):
 			row = []
 			for j in range(TILES_DOWN):
 				row.append(0)
-			self.map.append(row)
+			self.cleared.append(row)
 
 	def clear_block(self, position):
 		x, y = position
 		column = x/50
 		row = y/50
-		self.map[column][row] = 1
+		self.cleared[column][row] = 1
 
 	def print_ascii_map(self):
-		for row in self.map:
+		for row in self.cleared:
 			print row
 		
 class Game(object):
@@ -45,7 +49,7 @@ class Game(object):
 	def draw_darkness(self):
 		for row in range(TILES_ACROSS):
 			for col in range(TILES_DOWN):
-				if self.map.map[row][col] == 0:
+				if self.map.cleared[row][col] == 0:
 					pygame.draw.rect(self.screen, BLACK, (row*50, col*50, 50, 50)) 	
 
 	def move(self, hor, vert):
