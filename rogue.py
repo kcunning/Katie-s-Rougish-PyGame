@@ -1,12 +1,14 @@
 # INTIALISATION
-import pygame, math, sys
+import pygame, math, sys, random
 from pygame.locals import *
 
 
 BLACK = (0,0,0)
 WHITE = (255, 255, 255)
-TILES_ACROSS = 20
-TILES_DOWN = 15
+TILES_ACROSS = 21
+TILES_DOWN = 16
+TREASURES = 3
+TILE_SIZE = 48
 
 class Treasure(object):
 	''' Not implemented yet. 
@@ -23,6 +25,15 @@ class Map(object):
 		''' Sets all squares to uncleared.
 		'''
 		self.cleared = self.get_blank_map()
+		self.treasure = self.get_blank_map()
+		for i in range(TREASURES):
+			while 1:
+				row = random.randint(0, TILES_ACROSS-1)
+				col = random.randint(0, TILES_DOWN-1)
+				if not self.treasure[row][col]:
+					self.treasure[row][col] = Treasure()
+					break
+			
 		
 	def get_blank_map(self):
 		''' Returns a map with all values set to 0
@@ -40,8 +51,8 @@ class Map(object):
 	    	    and the squares nearby to partially cleared.
 		'''
 		x, y = position
-		column = x/50
-		row = y/50
+		column = x/TILE_SIZE
+		row = y/TILE_SIZE
 		self.cleared[column][row] = 2
 		if row < TILES_DOWN-1:
 			self.cleared[column][row+1] += 1
@@ -67,16 +78,26 @@ class Game(object):
 		'''
 		self.screen = pygame.display.set_mode((1024, 768))
 		self.player = pygame.image.load('dude.png')
-		self.bg = pygame.image.load('rainbowbg.png')
+		self.bg = pygame.image.load('boringbg.png')
 		self.clock = pygame.time.Clock()
 		self.direction = 0
-		self.position = (300, 300)
+		self.position = (0, 0)
 		self.map = Map()
 		self.map.clear_block(self.position)
 		self.screen.blit(self.bg, (0,0))
+		self.draw_treasure()
 		self.draw_darkness()
                 self.screen.blit(self.player, self.position)
 		self.run()
+
+	def draw_treasure(self):
+		''' Draws the treasure chests yet to be opened.
+		'''
+		for row in range(TILES_ACROSS):
+			for col in range(TILES_DOWN):
+				if self.map.treasure[row][col] != 0:
+					treasure = pygame.image.load('chest.png')
+					self.screen.blit(treasure, (row*TILE_SIZE, col*TILE_SIZE))
 
 	def draw_darkness(self):
 		''' Draws the darkness and shadows on the board. 0 is dark, 1 is in shadows,
@@ -85,12 +106,12 @@ class Game(object):
 		for row in range(TILES_ACROSS):
 			for col in range(TILES_DOWN):
 				if self.map.cleared[row][col] == 0:
-					pygame.draw.rect(self.screen, BLACK, (row*50, col*50, 50, 50)) 	
+					pygame.draw.rect(self.screen, BLACK, (row*TILE_SIZE, col*TILE_SIZE, TILE_SIZE, TILE_SIZE)) 	
 				if self.map.cleared[row][col] == 1:
-					shadow = pygame.Surface((50,50))
+					shadow = pygame.Surface((TILE_SIZE, TILE_SIZE))
 					shadow.set_alpha(200)
 					shadow.fill(BLACK)
-					self.screen.blit(shadow, (row*50, col*50))
+					self.screen.blit(shadow, (row*TILE_SIZE, col*TILE_SIZE))
 
 	def move(self, hor, vert):
 		''' Moves the player, given a keypress. If the player hits ESC, the game quits.
@@ -98,11 +119,12 @@ class Game(object):
 		x, y = self.position
 		x = x + hor
 		y = y + vert
-		if x > (TILES_ACROSS-1) * 50 or x < 0 or y > (TILES_DOWN-1) * 50 or y < 0:
+		if x > (TILES_ACROSS-1) * TILE_SIZE or x < 0 or y > (TILES_DOWN-1) * TILE_SIZE or y < 0:
 			return
 		self.position = (x, y)
 		self.map.clear_block(self.position)
 		self.screen.blit(self.bg, (0, 0))
+		self.draw_treasure()
 		self.draw_darkness()
 		self.screen.blit(self.player, self.position)
 		pygame.display.flip()
@@ -117,10 +139,10 @@ class Game(object):
 			for event in pygame.event.get():
                         	if not hasattr(event, 'key'): continue
                         	if event.key == K_ESCAPE: sys.exit(0)
-                        	if event.key == K_LEFT: hor = -25
-                        	if event.key == K_RIGHT: hor = 25
-                        	if event.key == K_UP: vert = -25
-                        	if event.key == K_DOWN: vert = 25
+                        	if event.key == K_LEFT: hor = -TILE_SIZE/2
+                        	if event.key == K_RIGHT: hor = TILE_SIZE/2
+                        	if event.key == K_UP: vert = -TILE_SIZE/2
+                        	if event.key == K_DOWN: vert = TILE_SIZE/2
 				self.move(hor, vert)
 
 def main():
