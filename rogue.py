@@ -21,7 +21,6 @@ class Map(object):
 		x, y = position
 		column = x/50
 		row = y/50
-		print "Column %s, Row %s" % (str(column), str(row))
 		self.map[column][row] = 1
 
 	def print_ascii_map(self):
@@ -38,10 +37,10 @@ class Game(object):
 		self.position = (300, 300)
 		self.map = Map()
 		self.map.clear_block(self.position)
+		self.map.print_ascii_map()
 		self.run()
 
 	def draw_darkness(self):
-		print self.map.map.__len__()
 		for row in range(TILES_ACROSS+1):
 			for col in range(TILES_DOWN+1):
 				if self.map.map[row][col] == 0:
@@ -73,7 +72,6 @@ class Game(object):
                         	if event.key == K_UP: vert = -25
                         	if event.key == K_DOWN: vert = 25
 				self.move(hor, vert)
-				self.map.print_ascii_map()
 
 def main():
         while 1:
