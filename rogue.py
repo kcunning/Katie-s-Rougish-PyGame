@@ -38,6 +38,9 @@ class Game(object):
 		self.map = Map()
 		self.map.clear_block(self.position)
 		self.map.print_ascii_map()
+		self.screen.blit(self.bg, (0,0))
+		self.draw_darkness()
+                self.screen.blit(self.player, self.position)
 		self.run()
 
 	def draw_darkness(self):
