@@ -14,12 +14,21 @@ class Treasure(object):
 
 class Map(object):
 	def __init__(self):
-		self.cleared = []
+		self.cleared = get_blank_map()
 		for i in range(TILES_ACROSS):
 			row = []
 			for j in range(TILES_DOWN):
 				row.append(0)
 			self.cleared.append(row)
+	
+	def get_blank_map(self):
+		map = []
+		for i in range(TILES_ACROSS):
+                        row = []
+                        for j in range(TILES_DOWN):
+                                row.append(0)
+                        map.append(row)
+		return map
 
 	def clear_block(self, position):
 		x, y = position
