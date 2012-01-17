@@ -9,14 +9,24 @@ TILES_ACROSS = 20
 TILES_DOWN = 15
 
 class Treasure(object):
+	''' Not implemented yet. 
+	'''
 	def __init__(self):
 		pass
 
 class Map(object):
+	''' Stores the values for the map, but doesn't render it for the game. 
+
+	    Map.cleared = The cleared squares
+	'''
 	def __init__(self):
+		''' Sets all squares to uncleared.
+		'''
 		self.cleared = self.get_blank_map()
 		
 	def get_blank_map(self):
+		''' Returns a map with all values set to 0
+		'''
 		map = []
 		for i in range(TILES_ACROSS):
                         row = []
@@ -26,6 +36,9 @@ class Map(object):
 		return map
 
 	def clear_block(self, position):
+		''' Given the current position of the player, sets the current square to completely cleared, 
+	    	    and the squares nearby to partially cleared.
+		'''
 		x, y = position
 		column = x/50
 		row = y/50
@@ -40,11 +53,18 @@ class Map(object):
 			self.cleared[column-1][row] += 1
 
 	def print_ascii_map(self):
+		''' Prints an ascii map to the console. For troubleshooting only.
+		'''
 		for row in self.cleared:
 			print row
 		
 class Game(object):
+	''' The game object. Controls rendering the game and moving the player.
+	'''
 	def __init__(self):
+		''' Sets up the initial game board, with the player at a set position.
+	    	    Once everything is set up, starts the game.
+		'''
 		self.screen = pygame.display.set_mode((1024, 768))
 		self.player = pygame.image.load('dude.png')
 		self.bg = pygame.image.load('rainbowbg.png')
@@ -59,6 +79,9 @@ class Game(object):
 		self.run()
 
 	def draw_darkness(self):
+		''' Draws the darkness and shadows on the board. 0 is dark, 1 is in shadows,
+	    	    2 is fully revealed.
+		'''
 		for row in range(TILES_ACROSS):
 			for col in range(TILES_DOWN):
 				if self.map.cleared[row][col] == 0:
@@ -70,6 +93,8 @@ class Game(object):
 					self.screen.blit(shadow, (row*50, col*50))
 
 	def move(self, hor, vert):
+		''' Moves the player, given a keypress. If the player hits ESC, the game quits.
+		'''
 		x, y = self.position
 		x = x + hor
 		y = y + vert
@@ -83,6 +108,8 @@ class Game(object):
 		pygame.display.flip()
 
 	def run(self):
+		''' The main loop of the game.
+		'''
 		while 1:
 			self.clock.tick(30)
 			hor = 0
