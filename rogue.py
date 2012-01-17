@@ -14,13 +14,8 @@ class Treasure(object):
 
 class Map(object):
 	def __init__(self):
-		self.cleared = get_blank_map()
-		for i in range(TILES_ACROSS):
-			row = []
-			for j in range(TILES_DOWN):
-				row.append(0)
-			self.cleared.append(row)
-	
+		self.cleared = self.get_blank_map()
+		
 	def get_blank_map(self):
 		map = []
 		for i in range(TILES_ACROSS):
@@ -34,7 +29,15 @@ class Map(object):
 		x, y = position
 		column = x/50
 		row = y/50
-		self.cleared[column][row] = 1
+		self.cleared[column][row] = 2
+		if row < TILES_DOWN-1:
+			self.cleared[column][row+1] += 1
+		if row > 0:
+			self.cleared[column][row-1] += 1
+		if column < TILES_ACROSS-1:
+			self.cleared[column+1][row] += 1
+		if column > 0:
+			self.cleared[column-1][row] += 1
 
 	def print_ascii_map(self):
 		for row in self.cleared:
@@ -60,6 +63,11 @@ class Game(object):
 			for col in range(TILES_DOWN):
 				if self.map.cleared[row][col] == 0:
 					pygame.draw.rect(self.screen, BLACK, (row*50, col*50, 50, 50)) 	
+				if self.map.cleared[row][col] == 1:
+					shadow = pygame.Surface((50,50))
+					shadow.set_alpha(200)
+					shadow.fill(BLACK)
+					self.screen.blit(shadow, (row*50, col*50))
 
 	def move(self, hor, vert):
 		x, y = self.position
