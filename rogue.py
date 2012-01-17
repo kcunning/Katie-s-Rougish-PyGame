@@ -5,15 +5,15 @@ from pygame.locals import *
 
 BLACK = (0,0,0)
 WHITE = (255, 255, 255)
-TILES_ACROSS = 20 - 1
-TILES_DOWN = 15 - 1
+TILES_ACROSS = 20
+TILES_DOWN = 15
 
 class Map(object):
 	def __init__(self):
 		self.map = []
-		for i in range(TILES_ACROSS+1):
+		for i in range(TILES_ACROSS):
 			row = []
-			for j in range(TILES_DOWN+1):
+			for j in range(TILES_DOWN):
 				row.append(0)
 			self.map.append(row)
 
@@ -43,8 +43,8 @@ class Game(object):
 		self.run()
 
 	def draw_darkness(self):
-		for row in range(TILES_ACROSS+1):
-			for col in range(TILES_DOWN+1):
+		for row in range(TILES_ACROSS):
+			for col in range(TILES_DOWN):
 				if self.map.map[row][col] == 0:
 					pygame.draw.rect(self.screen, BLACK, (row*50, col*50, 50, 50)) 	
 
@@ -52,7 +52,7 @@ class Game(object):
 		x, y = self.position
 		x = x + hor
 		y = y + vert
-		if x > TILES_ACROSS * 50 or x < 0 or y > TILES_DOWN * 50 or y < 0:
+		if x > (TILES_ACROSS-1) * 50 or x < 0 or y > (TILES_DOWN-1) * 50 or y < 0:
 			return
 		self.position = (x, y)
 		self.map.clear_block(self.position)
