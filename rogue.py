@@ -2,19 +2,26 @@
 import pygame, math, sys, random
 from pygame.locals import *
 
-
 BLACK = (0,0,0)
 WHITE = (255, 255, 255)
-TILES_ACROSS = 21
-TILES_DOWN = 16
-TREASURES = 3
+COLUMNS = 21
+ROWS = 16
+TREASURES = 4
 TILE_SIZE = 48
+ALL_TREASURES = {
+                        "hat": "Quite cunning",
+                        "sqord": "Knock-off sword. Probably from Ikea.",
+                        "book": "What the hell are you going to do with this?"
+                        }
 
 class Treasure(object):
 	''' Not implemented yet. 
 	'''
 	def __init__(self):
-		pass
+		k = ALL_TREASURES.keys()
+		r = random.randint(0, ALL_TREASURES.keys().__len__()-1)
+		self.title = ALL_TREASURES.keys()[r]
+		self.description = ALL_TREASURES[self.title]
 
 class Map(object):
 	''' Stores the values for the map, but doesn't render it for the game. 
@@ -28,22 +35,22 @@ class Map(object):
 		self.treasure = self.get_blank_map()
 		for i in range(TREASURES):
 			while 1:
-				row = random.randint(0, TILES_ACROSS-1)
-				col = random.randint(0, TILES_DOWN-1)
+				col = random.randint(0, COLUMNS-1)
+				row = random.randint(0, ROWS-1)
 				if not self.treasure[row][col]:
 					self.treasure[row][col] = Treasure()
 					break
 			
-		
 	def get_blank_map(self):
 		''' Returns a map with all values set to 0
 		'''
 		map = []
-		for i in range(TILES_ACROSS):
+		for i in range(ROWS):
                         row = []
-                        for j in range(TILES_DOWN):
+                        for j in range(COLUMNS):
                                 row.append(0)
                         map.append(row)
+		print map.__len__(), map[0].__len__()
 		return map
 
 	def clear_block(self, position):
@@ -51,23 +58,35 @@ class Map(object):
 	    	    and the squares nearby to partially cleared.
 		'''
 		x, y = position
-		column = x/TILE_SIZE
-		row = y/TILE_SIZE
-		self.cleared[column][row] = 2
-		if row < TILES_DOWN-1:
-			self.cleared[column][row+1] += 1
+		col = y/TILE_SIZE
+		row = x/TILE_SIZE
+		print col, row
+		
+		self.cleared[row][col] = 2
+		if row < ROWS-1:
+			self.cleared[row+1][col] += 1
 		if row > 0:
-			self.cleared[column][row-1] += 1
-		if column < TILES_ACROSS-1:
-			self.cleared[column+1][row] += 1
-		if column > 0:
-			self.cleared[column-1][row] += 1
+			self.cleared[row-1][col] += 1
+		if col < COLUMNS-1:
+			self.cleared[row][col+1] += 1
+		if col > 0:
+			self.cleared[row][col-1] += 1
+	
+	def clear_treasure(self, position):
+		''' Given a position, clears the treasure from it, and returns the treasure.
+		'''	
+		x, y = position
+		row = x/TILE_SIZE
+                column = y/TILE_SIZE
+		treasure = self.treasure[column][row]
+		self.treasure[column][row] = 0
+		return treasure
 
 	def print_ascii_map(self):
 		''' Prints an ascii map to the console. For troubleshooting only.
 		'''
 		for row in self.cleared:
-			print row
+			print row, row.__len__()
 		
 class Game(object):
 	''' The game object. Controls rendering the game and moving the player.
@@ -76,25 +95,38 @@ class Game(object):
 		''' Sets up the initial game board, with the player at a set position.
 	    	    Once everything is set up, starts the game.
 		'''
-		self.screen = pygame.display.set_mode((1024, 768))
+		self.font = pygame.font.SysFont(None, 48)
+		self.alert = self.font.render("Welcome to Katie's Roguelike!", True, WHITE, BLACK)
+		self.treasures = []
+		self.screen = pygame.display.set_mode((1280, 832))
 		self.player = pygame.image.load('dude.png')
-		self.bg = pygame.image.load('boringbg.png')
+		self.bg = pygame.image.load('rainbowbg.png')
 		self.clock = pygame.time.Clock()
 		self.direction = 0
 		self.position = (0, 0)
 		self.map = Map()
 		self.map.clear_block(self.position)
+		treasure = self.map.clear_treasure(self.position)
+		if treasure:
+			add_treasure(treasure)
 		self.screen.blit(self.bg, (0,0))
 		self.draw_treasure()
 		self.draw_darkness()
                 self.screen.blit(self.player, self.position)
+		self.screen.blit(self.alert, (0, 790))
+		self.map.print_ascii_map()
 		self.run()
+
+	def add_treasure(self, treasure):
+		self.treasures.append(treasure)
+		text = "You found a %s. %s" % (treasure.title, treasure.description)
+		self.alert = self.font.render(text, True, WHITE, BLACK)
 
 	def draw_treasure(self):
 		''' Draws the treasure chests yet to be opened.
 		'''
-		for row in range(TILES_ACROSS):
-			for col in range(TILES_DOWN):
+		for row in range(ROWS):
+			for col in range(COLUMNS):
 				if self.map.treasure[row][col] != 0:
 					treasure = pygame.image.load('chest.png')
 					self.screen.blit(treasure, (row*TILE_SIZE, col*TILE_SIZE))
@@ -103,8 +135,8 @@ class Game(object):
 		''' Draws the darkness and shadows on the board. 0 is dark, 1 is in shadows,
 	    	    2 is fully revealed.
 		'''
-		for row in range(TILES_ACROSS):
-			for col in range(TILES_DOWN):
+		for row in range(ROWS):
+			for col in range(COLUMNS):
 				if self.map.cleared[row][col] == 0:
 					pygame.draw.rect(self.screen, BLACK, (row*TILE_SIZE, col*TILE_SIZE, TILE_SIZE, TILE_SIZE)) 	
 				if self.map.cleared[row][col] == 1:
@@ -114,19 +146,23 @@ class Game(object):
 					self.screen.blit(shadow, (row*TILE_SIZE, col*TILE_SIZE))
 
 	def move(self, hor, vert):
-		''' Moves the player, given a keypress. If the player hits ESC, the game quits.
+		''' Moves the player, given a keypress. 
 		'''
 		x, y = self.position
 		x = x + hor
 		y = y + vert
-		if x > (TILES_ACROSS-1) * TILE_SIZE or x < 0 or y > (TILES_DOWN-1) * TILE_SIZE or y < 0:
+		if x > (COLUMNS-1) * TILE_SIZE or x < 0 or y > (ROWS-1) * TILE_SIZE or y < 0:
 			return
 		self.position = (x, y)
 		self.map.clear_block(self.position)
+		treasure = self.map.clear_treasure(self.position)
+		if treasure:
+			self.add_treasure(treasure)
 		self.screen.blit(self.bg, (0, 0))
 		self.draw_treasure()
 		self.draw_darkness()
 		self.screen.blit(self.player, self.position)
+		self.screen.blit(self.alert, (0, 790))
 		pygame.display.flip()
 
 	def run(self):
@@ -147,6 +183,7 @@ class Game(object):
 
 def main():
         while 1:
+		pygame.init()
 		game = Game()
 
 if __name__ == "__main__":
