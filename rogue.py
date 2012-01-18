@@ -4,8 +4,8 @@ from pygame.locals import *
 
 BLACK = (0,0,0)
 WHITE = (255, 255, 255)
-COLUMNS = 21
-ROWS = 16
+COLUMNS = 16
+ROWS = 21
 TREASURES = 4
 TILE_SIZE = 48
 ALL_TREASURES = {
@@ -50,7 +50,6 @@ class Map(object):
                         for j in range(COLUMNS):
                                 row.append(0)
                         map.append(row)
-		print map.__len__(), map[0].__len__()
 		return map
 
 	def clear_block(self, position):
@@ -60,7 +59,6 @@ class Map(object):
 		x, y = position
 		col = y/TILE_SIZE
 		row = x/TILE_SIZE
-		print "Row: %s, Col: %s" % (str(row), str(col))
 		
 		self.cleared[row][col] = 2
 		if row < ROWS-1:
@@ -114,7 +112,6 @@ class Game(object):
 		self.draw_darkness()
                 self.screen.blit(self.player, self.position)
 		self.screen.blit(self.alert, (0, 790))
-		self.map.print_ascii_map()
 		self.run()
 
 	def add_treasure(self, treasure):
@@ -148,7 +145,6 @@ class Game(object):
 	def move(self, hor, vert):
 		''' Moves the player, given a keypress. 
 		'''
-		print hor, vert
 		x, y = self.position
 		row = x + hor
 		col = y + vert
