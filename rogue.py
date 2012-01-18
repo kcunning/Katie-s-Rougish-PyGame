@@ -60,7 +60,7 @@ class Map(object):
 		x, y = position
 		col = y/TILE_SIZE
 		row = x/TILE_SIZE
-		print col, row
+		print "Row: %s, Col: %s" % (str(row), str(col))
 		
 		self.cleared[row][col] = 2
 		if row < ROWS-1:
@@ -77,9 +77,9 @@ class Map(object):
 		'''	
 		x, y = position
 		row = x/TILE_SIZE
-                column = y/TILE_SIZE
-		treasure = self.treasure[column][row]
-		self.treasure[column][row] = 0
+                col = y/TILE_SIZE
+		treasure = self.treasure[row][col]
+		self.treasure[row][col] = 0
 		return treasure
 
 	def print_ascii_map(self):
@@ -148,12 +148,13 @@ class Game(object):
 	def move(self, hor, vert):
 		''' Moves the player, given a keypress. 
 		'''
+		print hor, vert
 		x, y = self.position
-		x = x + hor
-		y = y + vert
-		if x > (COLUMNS-1) * TILE_SIZE or x < 0 or y > (ROWS-1) * TILE_SIZE or y < 0:
+		row = x + hor
+		col = y + vert
+		if row > (ROWS-1) * TILE_SIZE or row < 0 or col > (COLUMNS-1) * TILE_SIZE or col < 0:
 			return
-		self.position = (x, y)
+		self.position = (row, col)
 		self.map.clear_block(self.position)
 		treasure = self.map.clear_treasure(self.position)
 		if treasure:
