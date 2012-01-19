@@ -6,13 +6,14 @@ BLACK = (0,0,0)
 WHITE = (255, 255, 255)
 COLUMNS = 16
 ROWS = 21
-TREASURES = 4
+TREASURES = 10
 TILE_SIZE = 48
 ALL_TREASURES = {
                         "hat": "Quite cunning",
                         "sqord": "Knock-off sword. Probably from Ikea.",
                         "book": "What the hell are you going to do with this?"
                         }
+LONG_STRING = "X" * 50
 
 class Treasure(object):
 	''' Not implemented yet. 
@@ -93,10 +94,10 @@ class Game(object):
 		''' Sets up the initial game board, with the player at a set position.
 	    	    Once everything is set up, starts the game.
 		'''
-		self.font = pygame.font.SysFont(None, 48)
-		self.alert = self.font.render("Welcome to Katie's Roguelike!", True, WHITE, BLACK)
-		self.treasures = []
 		self.screen = pygame.display.set_mode((1280, 832))
+		self.font = pygame.font.SysFont(None, 48)
+		self.draw_alert("Welcome to Katie's Roguelike!")
+		self.treasures = []
 		self.player = pygame.image.load('dude.png')
 		self.bg = pygame.image.load('rainbowbg.png')
 		self.clock = pygame.time.Clock()
@@ -114,10 +115,21 @@ class Game(object):
 		self.screen.blit(self.alert, (0, 790))
 		self.run()
 
+	def draw_alert(self, alert, color=WHITE):
+		''' Draws the alert box at the bottom 
+		'''
+		self.alert = self.font.render(LONG_STRING, True, BLACK, BLACK)
+		self.screen.blit(self.alert, (0, 790))
+		try:
+			pygame.display.flip()
+		except:
+			pass
+		self.alert = self.font.render(alert, True, color, BLACK)
+
 	def add_treasure(self, treasure):
 		self.treasures.append(treasure)
 		text = "You found a %s. %s" % (treasure.title, treasure.description)
-		self.alert = self.font.render(text, True, WHITE, BLACK)
+		self.draw_alert(text)
 
 	def draw_treasure(self):
 		''' Draws the treasure chests yet to be opened.
