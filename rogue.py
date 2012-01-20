@@ -7,6 +7,7 @@ WHITE = (255, 255, 255)
 COLUMNS = 16
 ROWS = 21
 TREASURES = 10
+WALLS = 10
 TILE_SIZE = 48
 ALL_TREASURES = {
                         "hat": "Quite cunning",
@@ -35,12 +36,20 @@ class Map(object):
 		'''
 		self.cleared = self.get_blank_map()
 		self.treasure = self.get_blank_map()
+		self.walls = self.get_blank_map()
 		for i in range(TREASURES):
 			while 1:
 				col = random.randint(0, COLUMNS-1)
 				row = random.randint(0, ROWS-1)
 				if not self.treasure[row][col]:
 					self.treasure[row][col] = Treasure()
+					break
+		for i in range(WALLS):
+			while 1:
+				col = random.randint(0, COLUMNS-1)
+				row = random.randint(0, ROWS-1)
+				if not self.treasure[row][col] and not self.walls[row][col]:
+					self.walls[row][col] = 1
 					break
 			
 	def get_blank_map(self):
@@ -132,6 +141,7 @@ class Game(object):
 		if treasure:
 			add_treasure(treasure)
 		self.screen.blit(self.bg, (0,0))
+		self.draw_walls()
 		self.draw_treasure()
 		self.draw_darkness()
 		self.draw_inventory()
@@ -176,6 +186,13 @@ class Game(object):
 					treasure = pygame.image.load('chest.png')
 					self.screen.blit(treasure, (row*TILE_SIZE, col*TILE_SIZE))
 
+	def draw_walls(self):
+		for row in range(ROWS):
+			for col in range(COLUMNS):
+				if self.map.walls[row][col] != 0:
+					wall = pygame.image.load('wall.png')
+					self.screen.blit(wall, (row*TILE_SIZE, col*TILE_SIZE))
+
 	def draw_darkness(self):
 		''' Draws the darkness and shadows on the board. 0 is dark, 1 is in shadows,
 	    	    2 is fully revealed.
@@ -190,6 +207,14 @@ class Game(object):
 					shadow.fill(BLACK)
 					self.screen.blit(shadow, (row*TILE_SIZE, col*TILE_SIZE))
 
+	def has_wall(self, row, col):
+		row = row/TILE_SIZE
+		col = col/TILE_SIZE
+		if self.map.walls[row][col]:
+			return True
+		else:
+			return False
+
 	def move(self, hor, vert):
 		''' Moves the player, given a keypress. 
 		'''
@@ -197,6 +222,8 @@ class Game(object):
 		row = x + hor
 		col = y + vert
 		if row > (ROWS-1) * TILE_SIZE or row < 0 or col > (COLUMNS-1) * TILE_SIZE or col < 0:
+			return
+		if self.has_wall(row, col):
 			return
 		self.position = (row, col)
 		self.map.clear_block(self.position)
@@ -206,6 +233,7 @@ class Game(object):
 			self.draw_inventory()
 		self.screen.blit(self.bg, (0, 0))
 		self.draw_treasure()
+		self.draw_walls()
 		self.draw_darkness()
 		self.screen.blit(self.player, self.position)
 		self.screen.blit(self.alert, (0, 790))
@@ -220,11 +248,13 @@ class Game(object):
 			vert = 0
 			for event in pygame.event.get():
                         	if not hasattr(event, 'key'): continue
-                        	if event.key == K_ESCAPE: sys.exit(0)
-                        	if event.key == K_LEFT: hor = -TILE_SIZE/2
-                        	if event.key == K_RIGHT: hor = TILE_SIZE/2
-                        	if event.key == K_UP: vert = -TILE_SIZE/2
-                        	if event.key == K_DOWN: vert = TILE_SIZE/2
+				print event.key
+				if event.type == KEYDOWN:
+                        		if event.key == K_ESCAPE: sys.exit(0)
+                        		if event.key == K_LEFT: hor = -TILE_SIZE
+                        		if event.key == K_RIGHT: hor = TILE_SIZE
+                        		if event.key == K_UP: vert = -TILE_SIZE
+                        		if event.key == K_DOWN: vert = TILE_SIZE
 				self.move(hor, vert)
 
 def main():
