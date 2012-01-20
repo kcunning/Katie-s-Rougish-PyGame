@@ -11,7 +11,8 @@ TILE_SIZE = 48
 ALL_TREASURES = {
                         "hat": "Quite cunning",
                         "sqord": "Knock-off sword. Probably from Ikea.",
-                        "book": "What the hell are you going to do with this?"
+                        "book": "What the hell are you going to do with this?",
+			"rainbow": "Joy in a box."
                         }
 LONG_STRING = "X" * 50
 
@@ -86,7 +87,27 @@ class Map(object):
 		'''
 		for row in self.cleared:
 			print row, row.__len__()
-		
+
+class Inventory(object):
+	''' The inventory for the player.
+	'''
+
+	def __init__(self):
+		''' Sets up the initial blank inventory.
+		'''
+		self.inventory = {}
+
+	def get_items(self):
+		return self.inventory.keys()
+
+	def add_to_inventory(self, item):
+		''' Adds an item to the inventory
+		'''
+		try:
+			self.inventory[item] += 1
+		except:
+			self.inventory[item] = 1
+
 class Game(object):
 	''' The game object. Controls rendering the game and moving the player.
 	'''
@@ -96,8 +117,10 @@ class Game(object):
 		'''
 		self.screen = pygame.display.set_mode((1280, 832))
 		self.font = pygame.font.SysFont(None, 48)
+		self.small_font = pygame.font.SysFont(None, 20)
 		self.draw_alert("Welcome to Katie's Roguelike!")
-		self.treasures = []
+		self.inventory = Inventory()
+		self.inventory_screen = self.small_font.render("Inventory", True, WHITE, BLACK)
 		self.player = pygame.image.load('dude.png')
 		self.bg = pygame.image.load('rainbowbg.png')
 		self.clock = pygame.time.Clock()
@@ -111,6 +134,7 @@ class Game(object):
 		self.screen.blit(self.bg, (0,0))
 		self.draw_treasure()
 		self.draw_darkness()
+		self.draw_inventory()
                 self.screen.blit(self.player, self.position)
 		self.screen.blit(self.alert, (0, 790))
 		self.run()
@@ -126,9 +150,21 @@ class Game(object):
 			pass
 		self.alert = self.font.render(alert, True, color, BLACK)
 
+	def draw_inventory(self):
+		self.screen.blit(self.inventory_screen, (1008, 0))
+		items = self.inventory.get_items()
+		for i in range(items.__len__()):
+			line = self.small_font.render(LONG_STRING, True, BLACK, BLACK)
+			self.screen.blit(line, (1008, ((i+1)*15)))
+		pygame.display.flip()
+		for item in items:
+			line = self.small_font.render(item, True, WHITE, BLACK)
+			self.screen.blit(line, (1008, (items.index(item)+1)*15))
+		pygame.display.flip()
+
 	def add_treasure(self, treasure):
-		self.treasures.append(treasure)
 		text = "You found a %s. %s" % (treasure.title, treasure.description)
+		self.inventory.add_to_inventory(treasure.title)
 		self.draw_alert(text)
 
 	def draw_treasure(self):
@@ -167,6 +203,7 @@ class Game(object):
 		treasure = self.map.clear_treasure(self.position)
 		if treasure:
 			self.add_treasure(treasure)
+			self.draw_inventory()
 		self.screen.blit(self.bg, (0, 0))
 		self.draw_treasure()
 		self.draw_darkness()
