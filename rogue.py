@@ -7,7 +7,7 @@ WHITE = (255, 255, 255)
 COLUMNS = 16
 ROWS = 21
 TREASURES = 10
-WALLS = 10
+WALLS = 30
 TILE_SIZE = 48
 ALL_TREASURES = {
                         "hat": "Quite cunning",
@@ -35,6 +35,7 @@ class Map(object):
 		''' Sets all squares to uncleared.
 		'''
 		self.cleared = self.get_blank_map()
+		self.current = self.get_blank_map()
 		self.treasure = self.get_blank_map()
 		self.walls = self.get_blank_map()
 		for i in range(TREASURES):
@@ -248,7 +249,6 @@ class Game(object):
 			vert = 0
 			for event in pygame.event.get():
                         	if not hasattr(event, 'key'): continue
-				print event.key
 				if event.type == KEYDOWN:
                         		if event.key == K_ESCAPE: sys.exit(0)
                         		if event.key == K_LEFT: hor = -TILE_SIZE
