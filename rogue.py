@@ -78,7 +78,13 @@ class Map(object):
                                 row.append(0)
                         map.append(row)
 		return map
-
+	
+	def is_block_empty(self, row, col):
+		if not self.treasure[row][col] and not self.monsters[row][col] and not self.walls[row][col]:
+			return True
+		else:
+			return False
+	
 	def clear_block(self, position):
 		''' Given the current position of the player, sets the current square to completely cleared, 
 	    	    and the squares nearby to partially cleared.
@@ -124,11 +130,8 @@ class Map(object):
 	def move_monsters(self):
 		monsters = self.get_all_monsters()
 		for monster in monsters.keys():
-			print "Moving monster", monster
 			d = random.sample(DIRECTIONS, 1)[0]
-			print d
 			new_row, new_col = row, col = monsters[monster]
-			print new_row, new_col
                         if d == "north":
                         	new_row -= 1
                         if d == "south":
@@ -137,12 +140,12 @@ class Map(object):
                                 new_col += 1
                         if d == "west":
                                 new_col -= 1
-			try:	
-				self.monsters[new_row][new_col] = monster
-				self.monsters[row][col] = 0
+			try:
+				if self.is_block_empty(new_row, new_col):
+					self.monsters[new_row][new_col] = monster
+					self.monsters[row][col] = 0
 			except:
-				pass # Monsters can run into walls too, you know.
-					
+				pass # Monsters can run into walls, edges, chests, etc. It consumes their turn.
 					
 
 class Inventory(object):
