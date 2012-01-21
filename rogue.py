@@ -181,8 +181,8 @@ class Game(object):
 		self.draw_alert("Welcome to Katie's Roguelike!")
 		self.inventory = Inventory()
 		self.inventory_screen = self.small_font.render("Inventory", True, WHITE, BLACK)
-		self.player = pygame.image.load('dude.png')
-		self.bg = pygame.image.load('rainbowbg.png')
+		self.player = pygame.image.load('images/dude.png')
+		self.bg = pygame.image.load('images/rainbowbg.png')
 		self.clock = pygame.time.Clock()
 		self.direction = 0
 		self.position = (0, 0)
@@ -236,21 +236,21 @@ class Game(object):
 		for row in range(ROWS):
 			for col in range(COLUMNS):
 				if self.map.treasure[row][col] != 0:
-					treasure = pygame.image.load('chest.png')
+					treasure = pygame.image.load('images/chest.png')
 					self.screen.blit(treasure, (row*TILE_SIZE, col*TILE_SIZE))
 	
 	def draw_monsters(self):
 		for row in range(ROWS):
 			for col in range(COLUMNS):
 				if self.map.monsters[row][col] != 0:
-					monster = pygame.image.load("dumb_monster.png")
+					monster = pygame.image.load("images/dumb_monster.png")
 					self.screen.blit(monster, (row*TILE_SIZE, col*TILE_SIZE))
 	
 	def draw_walls(self):
 		for row in range(ROWS):
 			for col in range(COLUMNS):
 				if self.map.walls[row][col] != 0:
-					wall = pygame.image.load('wall.png')
+					wall = pygame.image.load('images/wall.png')
 					self.screen.blit(wall, (row*TILE_SIZE, col*TILE_SIZE))
 
 	def draw_darkness(self):
