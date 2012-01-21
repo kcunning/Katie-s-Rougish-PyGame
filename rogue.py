@@ -8,7 +8,7 @@ COLUMNS = 16
 ROWS = 21
 TREASURES = 10
 WALLS = 30
-MONSTERS = 5
+MONSTERS = 3
 TILE_SIZE = 48
 DIRECTIONS = ['north', 'south', 'east', 'west']
 ALL_TREASURES = {
@@ -141,7 +141,7 @@ class Map(object):
                         if d == "west":
                                 new_col -= 1
 			try:
-				if self.is_block_empty(new_row, new_col):
+				if self.is_block_empty(new_row, new_col) and new_row > 0 and new_col > 0:
 					self.monsters[new_row][new_col] = monster
 					self.monsters[row][col] = 0
 			except:
