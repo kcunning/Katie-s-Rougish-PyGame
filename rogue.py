@@ -8,6 +8,7 @@ COLUMNS = 16
 ROWS = 21
 TREASURES = 10
 WALLS = 30
+MONSTERS = 10
 TILE_SIZE = 48
 ALL_TREASURES = {
                         "hat": "Quite cunning",
@@ -16,6 +17,11 @@ ALL_TREASURES = {
 			"rainbow": "Joy in a box."
                         }
 LONG_STRING = "X" * 50
+
+class Monster(object):
+	def __init__(self):
+		self.title = "Derp Slime"
+		
 
 class Treasure(object):
 	''' Not implemented yet. 
@@ -38,6 +44,7 @@ class Map(object):
 		self.current = self.get_blank_map()
 		self.treasure = self.get_blank_map()
 		self.walls = self.get_blank_map()
+		self.monsters = self.get_blank_map()
 		for i in range(TREASURES):
 			while 1:
 				col = random.randint(0, COLUMNS-1)
@@ -51,6 +58,13 @@ class Map(object):
 				row = random.randint(0, ROWS-1)
 				if not self.treasure[row][col] and not self.walls[row][col]:
 					self.walls[row][col] = 1
+					break
+		for i in range(MONSTERS):
+			while 1:
+				col = random.randint(0, COLUMNS-1)
+				row = random.randint(0, COLUMNS-1)
+				if not self.treasure[row][col] and not self.walls[row][col]:
+					self.monsters[row][col] = Monster()
 					break
 			
 	def get_blank_map(self):
@@ -95,7 +109,7 @@ class Map(object):
 	def print_ascii_map(self):
 		''' Prints an ascii map to the console. For troubleshooting only.
 		'''
-		for row in self.cleared:
+		for row in self.monsters:
 			print row, row.__len__()
 
 class Inventory(object):
@@ -144,11 +158,13 @@ class Game(object):
 		self.screen.blit(self.bg, (0,0))
 		self.draw_walls()
 		self.draw_treasure()
+		self.draw_monsters()
 		self.draw_darkness()
 		self.draw_inventory()
                 self.screen.blit(self.player, self.position)
 		self.screen.blit(self.alert, (0, 790))
 		self.run()
+
 
 	def draw_alert(self, alert, color=WHITE):
 		''' Draws the alert box at the bottom 
@@ -186,7 +202,14 @@ class Game(object):
 				if self.map.treasure[row][col] != 0:
 					treasure = pygame.image.load('chest.png')
 					self.screen.blit(treasure, (row*TILE_SIZE, col*TILE_SIZE))
-
+	
+	def draw_monsters(self):
+		for row in range(ROWS):
+			for col in range(COLUMNS):
+				if self.map.monsters[row][col] != 0:
+					monster = pygame.image.load("dumb_monster.png")
+					self.screen.blit(monster, (row*TILE_SIZE, col*TILE_SIZE))
+	
 	def draw_walls(self):
 		for row in range(ROWS):
 			for col in range(COLUMNS):
@@ -235,6 +258,7 @@ class Game(object):
 		self.screen.blit(self.bg, (0, 0))
 		self.draw_treasure()
 		self.draw_walls()
+		self.draw_monsters()
 		self.draw_darkness()
 		self.screen.blit(self.player, self.position)
 		self.screen.blit(self.alert, (0, 790))
