@@ -8,8 +8,9 @@ COLUMNS = 16
 ROWS = 21
 TREASURES = 10
 WALLS = 30
-MONSTERS = 10
+MONSTERS = 5
 TILE_SIZE = 48
+DIRECTIONS = ['north', 'south', 'east', 'west']
 ALL_TREASURES = {
                         "hat": "Quite cunning",
                         "sqord": "Knock-off sword. Probably from Ikea.",
@@ -96,6 +97,14 @@ class Map(object):
 		if col > 0:
 			self.cleared[row][col-1] += 1
 	
+	def get_all_monsters(self):
+		monsters = {}
+		for row in range(ROWS):
+			for col in range(COLUMNS):
+				if self.monsters[row][col]:
+					monsters[self.monsters[row][col]] = [row, col]
+		return monsters
+
 	def clear_treasure(self, position):
 		''' Given a position, clears the treasure from it, and returns the treasure.
 		'''	
@@ -111,6 +120,30 @@ class Map(object):
 		'''
 		for row in self.monsters:
 			print row, row.__len__()
+
+	def move_monsters(self):
+		monsters = self.get_all_monsters()
+		for monster in monsters.keys():
+			print "Moving monster", monster
+			d = random.sample(DIRECTIONS, 1)[0]
+			print d
+			new_row, new_col = row, col = monsters[monster]
+			print new_row, new_col
+                        if d == "north":
+                        	new_row -= 1
+                        if d == "south":
+                                new_row += 1
+                        if d == "east":
+                                new_col += 1
+                        if d == "west":
+                                new_col -= 1
+			try:	
+				self.monsters[new_row][new_col] = monster
+				self.monsters[row][col] = 0
+			except:
+				pass # Monsters can run into walls too, you know.
+					
+					
 
 class Inventory(object):
 	''' The inventory for the player.
@@ -154,12 +187,12 @@ class Game(object):
 		self.map.clear_block(self.position)
 		treasure = self.map.clear_treasure(self.position)
 		if treasure:
-			add_treasure(treasure)
+			self.add_treasure(treasure)
 		self.screen.blit(self.bg, (0,0))
 		self.draw_walls()
 		self.draw_treasure()
 		self.draw_monsters()
-		self.draw_darkness()
+		#self.draw_darkness()
 		self.draw_inventory()
                 self.screen.blit(self.player, self.position)
 		self.screen.blit(self.alert, (0, 790))
@@ -259,7 +292,7 @@ class Game(object):
 		self.draw_treasure()
 		self.draw_walls()
 		self.draw_monsters()
-		self.draw_darkness()
+		#self.draw_darkness()
 		self.screen.blit(self.player, self.position)
 		self.screen.blit(self.alert, (0, 790))
 		pygame.display.flip()
@@ -279,6 +312,7 @@ class Game(object):
                         		if event.key == K_RIGHT: hor = TILE_SIZE
                         		if event.key == K_UP: vert = -TILE_SIZE
                         		if event.key == K_DOWN: vert = TILE_SIZE
+					self.map.move_monsters()
 				self.move(hor, vert)
 
 def main():
