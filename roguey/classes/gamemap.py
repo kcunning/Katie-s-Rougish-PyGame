@@ -2,6 +2,10 @@
 import pygame, math, sys, random
 from pygame.locals import *
 
+from constants import *
+from items import Treasure
+from monsters import Monster
+
 class Map(object):
 	''' Stores the values for the map, but doesn't render it for the game. 
 

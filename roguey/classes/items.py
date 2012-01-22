@@ -2,6 +2,8 @@
 import pygame, math, sys, random
 from pygame.locals import *
 
+from constants import *
+
 class Treasure(object):
 	''' Not implemented yet. 
 	'''
