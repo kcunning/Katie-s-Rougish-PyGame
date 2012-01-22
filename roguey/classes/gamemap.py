@@ -59,9 +59,19 @@ class Map(object):
 			return False
 	
 	def set_current_position(self, position):
-		self.cleared = self.get_blank_map()
+		self.current = self.get_blank_map()
 		row, col = position
-		self.cleared[row][col] = 1
+		row = row/TILE_SIZE
+		col = col/TILE_SIZE
+		self.current[row][col] = 1
+		if row > 0:
+			self.current[row-1][col] = 1
+		if row < ROWS - 1:
+			self.current[row+1][col] = 1
+		if col > 0:
+			self.current[row][col-1] = 1
+		if col < COLUMNS - 1:
+			self.current[row][col+1] = 1
 
 	def clear_block(self, position):
 		''' Given the current position of the player, sets the current square to completely cleared, 

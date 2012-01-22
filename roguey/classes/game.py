@@ -27,6 +27,7 @@ class Game(object):
 		self.position = (0, 0)
 		self.map = Map()
 		self.map.clear_block(self.position)
+		self.map.set_current_position(self.position)
 		treasure = self.map.clear_treasure(self.position)
 		if treasure:
 			self.add_treasure(treasure)
@@ -79,9 +80,12 @@ class Game(object):
 					self.screen.blit(treasure, (row*TILE_SIZE, col*TILE_SIZE))
 	
 	def draw_monsters(self):
+
+		
+
 		for row in range(ROWS):
 			for col in range(COLUMNS):
-				if self.map.monsters[row][col] != 0:
+				if self.map.monsters[row][col] != 0 and self.map.current[row][col] != 0:
 					monster = pygame.image.load(IMG_DIR + 'dumb_monster.png')
 					self.screen.blit(monster, (row*TILE_SIZE, col*TILE_SIZE))
 	
@@ -98,7 +102,8 @@ class Game(object):
 		for row in range(ROWS):
 			for col in range(COLUMNS):
 				if self.map.cleared[row][col] == 0:
-					pygame.draw.rect(self.screen, BLACK, (row*TILE_SIZE, col*TILE_SIZE, TILE_SIZE, TILE_SIZE)) 	
+					if not self.map.current[row][col]:
+						pygame.draw.rect(self.screen, BLACK, (row*TILE_SIZE, col*TILE_SIZE, TILE_SIZE, TILE_SIZE)) 	
 				if self.map.cleared[row][col] == 1:
 					if not self.map.current[row][col]:
 						shadow = pygame.Surface((TILE_SIZE, TILE_SIZE))
@@ -126,6 +131,7 @@ class Game(object):
 			return
 		self.position = (row, col)
 		self.map.clear_block(self.position)
+		self.map.set_current_position(self.position)
 		treasure = self.map.clear_treasure(self.position)
 		if treasure:
 			self.add_treasure(treasure)
