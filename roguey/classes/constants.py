@@ -1,3 +1,5 @@
+import os
+
 BLACK = (0,0,0)
 WHITE = (255, 255, 255)
 COLUMNS = 16
@@ -14,4 +16,5 @@ ALL_TREASURES = {
 			"rainbow": "Joy in a box."
                         }
 LONG_STRING = "X" * 50
-IMG_DIR = "/home/kcunning/projects/pygame/rogue/roguey/images/"
+
+IMG_DIR = os.getcwd() + "/roguey/images/"
