@@ -64,15 +64,21 @@ class Map(object):
 		row = row/TILE_SIZE
 		col = col/TILE_SIZE
 		self.current[row][col] = 1
-		if row > 0:
-			self.current[row-1][col] = 1
-		if row < ROWS - 1:
-			self.current[row+1][col] = 1
-		if col > 0:
-			self.current[row][col-1] = 1
-		if col < COLUMNS - 1:
-			self.current[row][col+1] = 1
-
+		RADIUS = 2
+		for i in range(RADIUS):
+			if row-i > 0:
+				self.current[row-i-1][col] = 1
+			if row+i < ROWS-1:
+				self.current[row+i+1][col] = 1
+			if col-i > 0:
+				self.current[row][col-i-1] = 1
+			if col+i < COLUMNS-1:
+				self.current[row][col+i+1] = 1
+		for i in range(RADIUS-1):
+			if row-i > 0 and col-i > 0: self.current[row-i-1][col-i-1] = 1
+			if row-i > 0 and col-i < COLUMNS-1: self.current[row-i-1][col+i+1] = 1
+			if row+1 < ROWS-1 and col-i > 0: self.current[row+i+1][col-i-1] = 1
+			if row+1 < ROWS-1 and col+i < COLUMNS-1: self.current[row+i+1][col+i+1] = 1
 	def clear_block(self, position):
 		''' Given the current position of the player, sets the current square to completely cleared, 
 	    	    and the squares nearby to partially cleared.
