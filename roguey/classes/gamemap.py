@@ -64,7 +64,6 @@ class Map(object):
 		row = row/TILE_SIZE
 		col = col/TILE_SIZE
 		self.current[row][col] = 1
-		RADIUS = 2
 		for i in range(RADIUS):
 			if row-i > 0:
 				self.current[row-i-1][col] = 1
