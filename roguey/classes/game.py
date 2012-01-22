@@ -34,7 +34,7 @@ class Game(object):
 		self.draw_walls()
 		self.draw_treasure()
 		self.draw_monsters()
-		#self.draw_darkness()
+		self.draw_darkness()
 		self.draw_inventory()
                 self.screen.blit(self.player, self.position)
 		self.screen.blit(self.alert, (0, 790))
@@ -94,17 +94,17 @@ class Game(object):
 
 	def draw_darkness(self):
 		''' Draws the darkness and shadows on the board. 0 is dark, 1 is in shadows,
-	    	    2 is fully revealed.
 		'''
 		for row in range(ROWS):
 			for col in range(COLUMNS):
 				if self.map.cleared[row][col] == 0:
 					pygame.draw.rect(self.screen, BLACK, (row*TILE_SIZE, col*TILE_SIZE, TILE_SIZE, TILE_SIZE)) 	
 				if self.map.cleared[row][col] == 1:
-					shadow = pygame.Surface((TILE_SIZE, TILE_SIZE))
-					shadow.set_alpha(200)
-					shadow.fill(BLACK)
-					self.screen.blit(shadow, (row*TILE_SIZE, col*TILE_SIZE))
+					if not self.map.current[row][col]:
+						shadow = pygame.Surface((TILE_SIZE, TILE_SIZE))
+						shadow.set_alpha(200)
+						shadow.fill(BLACK)
+						self.screen.blit(shadow, (row*TILE_SIZE, col*TILE_SIZE))
 
 	def has_wall(self, row, col):
 		row = row/TILE_SIZE
@@ -134,7 +134,7 @@ class Game(object):
 		self.draw_treasure()
 		self.draw_walls()
 		self.draw_monsters()
-		#self.draw_darkness()
+		self.draw_darkness()
 		self.screen.blit(self.player, self.position)
 		self.screen.blit(self.alert, (0, 790))
 		pygame.display.flip()

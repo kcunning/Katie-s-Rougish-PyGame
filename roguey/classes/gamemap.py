@@ -58,6 +58,11 @@ class Map(object):
 		else:
 			return False
 	
+	def set_current_position(self, position):
+		self.cleared = self.get_blank_map()
+		row, col = position
+		self.cleared[row][col] = 1
+
 	def clear_block(self, position):
 		''' Given the current position of the player, sets the current square to completely cleared, 
 	    	    and the squares nearby to partially cleared.
@@ -66,15 +71,15 @@ class Map(object):
 		col = y/TILE_SIZE
 		row = x/TILE_SIZE
 		
-		self.cleared[row][col] = 2
+		self.cleared[row][col] = 1
 		if row < ROWS-1:
-			self.cleared[row+1][col] += 1
+			self.cleared[row+1][col] = 1
 		if row > 0:
-			self.cleared[row-1][col] += 1
+			self.cleared[row-1][col] = 1
 		if col < COLUMNS-1:
-			self.cleared[row][col+1] += 1
+			self.cleared[row][col+1] = 1
 		if col > 0:
-			self.cleared[row][col-1] += 1
+			self.cleared[row][col-1] = 1
 	
 	def get_all_monsters(self):
 		monsters = {}
