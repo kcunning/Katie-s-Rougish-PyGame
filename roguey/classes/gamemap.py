@@ -76,8 +76,8 @@ class Map(object):
 		for i in range(RADIUS-1):
 			if row-i > 0 and col-i > 0: self.current[row-i-1][col-i-1] = 1
 			if row-i > 0 and col-i < COLUMNS-1: self.current[row-i-1][col+i+1] = 1
-			if row+1 < ROWS-1 and col-i > 0: self.current[row+i+1][col-i-1] = 1
-			if row+1 < ROWS-1 and col+i < COLUMNS-1: self.current[row+i+1][col+i+1] = 1
+			if row+i < ROWS-1 and col-i > 0: self.current[row+i+1][col-i-1] = 1
+			if row+i < ROWS-1 and col+i < COLUMNS-1: self.current[row+i+1][col+i+1] = 1
 	def clear_block(self, position):
 		''' Given the current position of the player, sets the current square to completely cleared, 
 	    	    and the squares nearby to partially cleared.

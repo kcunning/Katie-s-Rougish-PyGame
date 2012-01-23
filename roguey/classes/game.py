@@ -122,9 +122,9 @@ class Game(object):
 	def move(self, hor, vert):
 		''' Moves the player, given a keypress. 
 		'''
-		x, y = self.position
-		row = x + hor
-		col = y + vert
+		old_row, old_col = self.position
+		row = old_row + hor
+		col = old_col + vert
 		if row > (ROWS-1) * TILE_SIZE or row < 0 or col > (COLUMNS-1) * TILE_SIZE or col < 0:
 			return
 		if self.has_wall(row, col):
