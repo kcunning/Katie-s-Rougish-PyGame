@@ -118,13 +118,14 @@ class Game(object):
 			return True
 		else:
 			return False
+	
 
 	def move(self, hor, vert):
 		''' Moves the player, given a keypress. 
 		'''
-		old_row, old_col = self.position
-		row = old_row + hor
-		col = old_col + vert
+		self.old_row, self.old_col = self.position
+		row = self.old_row + hor
+		col = self.old_col + vert
 		if row > (ROWS-1) * TILE_SIZE or row < 0 or col > (COLUMNS-1) * TILE_SIZE or col < 0:
 			return
 		if self.has_wall(row, col):
@@ -136,14 +137,43 @@ class Game(object):
 		if treasure:
 			self.add_treasure(treasure)
 			self.draw_inventory()
-		self.screen.blit(self.bg, (0, 0))
-		self.draw_treasure()
-		self.draw_walls()
-		self.draw_monsters()
-		self.draw_darkness()
+		self.animate_move(hor, vert, "player")
+		self.draw_screen_layers()
 		self.screen.blit(self.player, self.position)
-		self.screen.blit(self.alert, (0, 790))
 		pygame.display.flip()
+
+	def draw_screen_layers(self):
+		self.screen.blit(self.bg, (0, 0))
+                self.draw_treasure()
+                self.draw_walls()
+                self.draw_monsters()
+                self.draw_darkness()
+		self.screen.blit(self.alert, (0, 790))
+
+	def animate_move(self, hor, vert, blit):
+		if vert:
+                        if vert > 0:
+                                for i in range(TILE_SIZE/MOVEMENT_SIZE):
+                                        self.draw_screen_layers()
+                                        self.screen.blit(self.__getattribute__(blit), [self.old_row, self.old_col+i*MOVEMENT_SIZE])
+                                        pygame.display.update()
+                        else:
+                                for i in range(TILE_SIZE/MOVEMENT_SIZE):
+                                        self.draw_screen_layers()
+                                        self.screen.blit(self.__getattribute__(blit), [self.old_row, self.old_col-i*MOVEMENT_SIZE])
+                                        pygame.display.update()
+                if hor:
+                        if hor > 0:
+                                for i in range(TILE_SIZE/MOVEMENT_SIZE):
+                                        self.draw_screen_layers()
+                                        self.screen.blit(self.__getattribute__(blit), [self.old_row+i*MOVEMENT_SIZE, self.old_col])
+                                        pygame.display.update()
+                        else:
+                                for i in range(TILE_SIZE/MOVEMENT_SIZE):
+                                        self.draw_screen_layers()
+                                        self.screen.blit(self.__getattribute__(blit), [self.old_row-i*MOVEMENT_SIZE, self.old_col])
+                                        pygame.display.update()
+
 
 	def run(self):
 		''' The main loop of the game.
