@@ -80,9 +80,6 @@ class Game(object):
 					self.screen.blit(treasure, (row*TILE_SIZE, col*TILE_SIZE))
 	
 	def draw_monsters(self):
-
-		
-
 		for row in range(ROWS):
 			for col in range(COLUMNS):
 				if self.map.monsters[row][col] != 0 and self.map.current[row][col] != 0:
