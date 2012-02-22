@@ -44,13 +44,7 @@ class Map(object):
 	def get_blank_map(self):
 		''' Returns a map with all values set to 0
 		'''
-		map = []
-		for i in range(ROWS):
-                        row = []
-                        for j in range(COLUMNS):
-                                row.append(0)
-                        map.append(row)
-		return map
+		return [ [0] * COLUMNS ] * ROWS
 	
 	def is_block_empty(self, row, col):
 		if not self.treasure[row][col] and not self.monsters[row][col] and not self.walls[row][col]:
