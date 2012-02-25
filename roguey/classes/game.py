@@ -134,7 +134,7 @@ class Game(object):
 		if treasure:
 			self.add_treasure(treasure)
 			self.draw_inventory()
-		self.animate_move(hor, vert, "player")
+		self.screen.blit(self.player, self.position)
 		self.draw_screen_layers()
 		self.screen.blit(self.player, self.position)
 		pygame.display.flip()
@@ -188,4 +188,6 @@ class Game(object):
                         		if event.key == K_UP: vert = -TILE_SIZE
                         		if event.key == K_DOWN: vert = TILE_SIZE
 					self.map.move_monsters()
+				self.draw_monsters()
 				self.move(hor, vert)
+				self.draw_monsters()
