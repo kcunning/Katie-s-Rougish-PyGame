@@ -55,10 +55,6 @@ class Game(object):
 
 	def draw_stats(self, color=WHITE):
 		self.screen.blit(self.stats_screen, (1008, 0))
-		try:
-			pygame.display.update()
-		except:
-			pass
 		self.stats_screen = self.small_font.render(self.player_stats.name, True, color, BLACK)
 		self.screen.blit(self.stats_screen, (1008, 0))
 		self.stats_screen = self.small_font.render("Level: " + str(self.player_stats.level), True, color, BLACK)
@@ -198,19 +194,31 @@ class Game(object):
 	def run(self):
 		''' The main loop of the game.
 		'''
+		# Fix for double move from Joshua Grigonis! Thanks!
+		hor = 0
+		vert = 0
 		while 1:
 			self.clock.tick(30)
-			hor = 0
-			vert = 0
 			for event in pygame.event.get():
-                        	if not hasattr(event, 'key'): continue
+				if not hasattr(event, 'key'): 
+					continue
 				if event.type == KEYDOWN:
-                        		if event.key == K_ESCAPE: sys.exit(0)
-                        		if event.key == K_LEFT: hor = -TILE_SIZE
-                        		if event.key == K_RIGHT: hor = TILE_SIZE
-                        		if event.key == K_UP: vert = -TILE_SIZE
-                        		if event.key == K_DOWN: vert = TILE_SIZE
+					if event.key == K_ESCAPE: 
+						sys.exit(0)
+					if event.key == K_LEFT:
+						hor = -TILE_SIZE
+						vert = 0
+					if event.key == K_RIGHT:
+						hor = TILE_SIZE
+						vert = 0
+					if event.key == K_UP:
+						vert = -TILE_SIZE
+						hor = 0
+					if event.key == K_DOWN:
+						vert = TILE_SIZE
+						hor = 0
+				if event.type == KEYUP:
 					self.map.move_monsters()
-				self.draw_monsters()
-				self.move(hor, vert)
-				self.draw_monsters()
+					self.move(hor, vert)
+					hor = 0
+					vert = 0
