@@ -4,4 +4,11 @@ from pygame.locals import *
 
 class Monster(object):
 	def __init__(self):
-		self.title = "Derp Slime"
+		pass
+		self.in_combat = False
+
+class Derpy(Monster):
+	def __init__(self):
+		self.title = "Derpy Slime"
+		self.level = 1
+		

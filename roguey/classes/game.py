@@ -5,7 +5,7 @@ from constants import *
 from items import Treasure
 from gamemap import Map
 from monsters import Monster
-from player import Inventory
+from player import Inventory, Player
 
 class Game(object):
 	''' The game object. Controls rendering the game and moving the player.
@@ -14,33 +14,55 @@ class Game(object):
 		''' Sets up the initial game board, with the player at a set position.
 	    	    Once everything is set up, starts the game.
 		'''
+		# Set up the screen
 		self.screen = pygame.display.set_mode((1280, 832))
 		self.font = pygame.font.SysFont(None, 48)
 		self.small_font = pygame.font.SysFont(None, 20)
 		self.draw_alert("Welcome to Katie's Roguelike!")
-		self.inventory = Inventory()
-		self.inventory_screen = self.small_font.render("Inventory", True, WHITE, BLACK)
-		self.player = pygame.image.load(IMG_DIR + 'dude.png')
 		self.bg = pygame.image.load(IMG_DIR + 'rainbowbg.png')
-		self.clock = pygame.time.Clock()
-		self.direction = 0
 		self.position = (0, 0)
+		self.player_blit = pygame.image.load(IMG_DIR + 'dude.png')
+		self.screen.blit(self.bg, (0,0))
+
+		# Set up some game components
+		self.inventory = Inventory()
 		self.map = Map()
-		self.map.clear_block(self.position)
-		self.map.set_current_position(self.position)
+		self.player_stats = Player()
 		treasure = self.map.clear_treasure(self.position)
 		if treasure:
 			self.add_treasure(treasure)
-		self.screen.blit(self.bg, (0,0))
+
+		self.inventory_screen = self.small_font.render("Inventory", True, WHITE, BLACK)
+		self.stats_screen = self.small_font.render("ARGH", True, WHITE, BLACK)
+		
+		
+		self.clock = pygame.time.Clock()
+		self.direction = 0
+		
+		self.map.clear_block(self.position)
+		self.map.set_current_position(self.position)
+		
 		self.draw_walls()
+		self.draw_stats()
 		self.draw_treasure()
 		self.draw_monsters()
 		self.draw_darkness()
 		self.draw_inventory()
-                self.screen.blit(self.player, self.position)
+		self.draw_stats()
+		self.screen.blit(self.player_blit, self.position)
 		self.screen.blit(self.alert, (0, 790))
 		self.run()
 
+	def draw_stats(self, color=WHITE):
+		self.screen.blit(self.stats_screen, (1008, 0))
+		try:
+			pygame.display.update()
+		except:
+			pass
+		self.stats_screen = self.small_font.render(self.player_stats.name, True, color, BLACK)
+		self.screen.blit(self.stats_screen, (1008, 0))
+		self.stats_screen = self.small_font.render("Level: " + str(self.player_stats.level), True, color, BLACK)
+		self.screen.blit(self.stats_screen, (1008, 15))
 
 	def draw_alert(self, alert, color=WHITE):
 		''' Draws the alert box at the bottom 
@@ -54,15 +76,15 @@ class Game(object):
 		self.alert = self.font.render(alert, True, color, BLACK)
 
 	def draw_inventory(self):
-		self.screen.blit(self.inventory_screen, (1008, 0))
+		self.screen.blit(self.inventory_screen, (1008, 100))
 		items = self.inventory.get_items()
 		for i in range(items.__len__()):
 			line = self.small_font.render(LONG_STRING, True, BLACK, BLACK)
-			self.screen.blit(line, (1008, ((i+1)*15)))
+			self.screen.blit(line, (1008, ((i+1)*15)+100))
 		pygame.display.flip()
 		for item in items:
 			line = self.small_font.render(item, True, WHITE, BLACK)
-			self.screen.blit(line, (1008, (items.index(item)+1)*15))
+			self.screen.blit(line, (1008, (items.index(item)+1)*15+100))
 		pygame.display.flip()
 
 	def add_treasure(self, treasure):
@@ -134,9 +156,9 @@ class Game(object):
 		if treasure:
 			self.add_treasure(treasure)
 			self.draw_inventory()
-		self.screen.blit(self.player, self.position)
+		self.screen.blit(self.player_blit, self.position)
 		self.draw_screen_layers()
-		self.screen.blit(self.player, self.position)
+		self.screen.blit(self.player_blit, self.position)
 		pygame.display.flip()
 
 	def draw_screen_layers(self):
@@ -145,6 +167,7 @@ class Game(object):
                 self.draw_walls()
                 self.draw_monsters()
                 self.draw_darkness()
+                self.draw_stats()
 		self.screen.blit(self.alert, (0, 790))
 
 	def animate_move(self, hor, vert, blit):

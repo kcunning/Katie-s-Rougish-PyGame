@@ -17,3 +17,32 @@ class Inventory(object):
 			self.inventory[item] += 1
 		except:
 			self.inventory[item] = 1
+
+
+class Player(object):
+	"""The player class. Contains level, HP, stats, and deals with combat."""
+	def __init__(self):
+		self.level = 1
+		self.current_hp = 10
+		self.strength = 1
+		self.name = "Dudeguy McAwesomesauce"
+
+	@property
+	def max_hp(self):
+		return 10 + (self.level-1)*5
+
+	@property
+	def defense(self):
+		return 1
+
+	def receive_damage(self, damage):
+		pass
+
+	def attempt_block(self, attack):
+		pass
+
+	def attack(self, attack):
+		pass
+
+
+		
