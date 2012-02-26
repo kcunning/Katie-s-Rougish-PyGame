@@ -59,6 +59,8 @@ class Game(object):
 		self.screen.blit(self.stats_screen, (1008, 0))
 		self.stats_screen = self.small_font.render("Level: " + str(self.player_stats.level), True, color, BLACK)
 		self.screen.blit(self.stats_screen, (1008, 15))
+		self.stats_screen = self.small_font.render("HP: %s/%s" % (str(self.player_stats.current_hp), str(self.player_stats.max_hp)), True, color, BLACK)
+		self.screen.blit(self.stats_screen, (1008, 30)) 
 
 	def draw_alert(self, alert, color=WHITE):
 		''' Draws the alert box at the bottom 
