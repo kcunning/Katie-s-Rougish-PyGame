@@ -4,7 +4,7 @@ from pygame.locals import *
 from constants import *
 from items import Treasure
 from gamemap import Map
-from monsters import Monster
+from monsters import Derpy
 from player import Inventory, Player
 
 class Game(object):
@@ -135,6 +135,14 @@ class Game(object):
             return True
         else:
             return False
+
+    def has_monster(self, row, col):
+        row = row/TILE_SIZE
+        col = col/TILE_SIZE
+        if self.map.monsters[row][col]:
+            return True
+        else:
+            return False
     
 
     def move(self, hor, vert):
@@ -147,6 +155,8 @@ class Game(object):
             return
         if self.has_wall(row, col):
             return
+        if self.has_wall(row, col):
+            print "I should be entering combat."
         self.position = (row, col)
         self.map.clear_block(self.position)
         self.map.set_current_position(self.position)

@@ -4,7 +4,7 @@ from pygame.locals import *
 
 from constants import *
 from items import Treasure
-from monsters import Monster
+from monsters import Derpy
 
 class Map(object):
     ''' Stores the values for the map, but doesn't render it for the game. 
@@ -38,7 +38,7 @@ class Map(object):
                 col = random.randint(0, COLUMNS-1)
                 row = random.randint(0, COLUMNS-1)
                 if not self.treasure[row][col] and not self.walls[row][col]:
-                    self.monsters[row][col] = Monster()
+                    self.monsters[row][col] = Derpy()
                     break
             
     def get_blank_map(self):
