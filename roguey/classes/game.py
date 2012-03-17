@@ -20,27 +20,26 @@ class Game(object):
         self.small_font = pygame.font.SysFont(None, 20)
         self.draw_alert("Welcome to Katie's Roguelike!")
         self.bg = pygame.image.load(IMG_DIR + 'rainbowbg.png')
-        self.position = (0, 0)
         self.player_blit = pygame.image.load(IMG_DIR + 'dude.png')
         self.screen.blit(self.bg, (0,0))
 
         # Set up some game components
         self.inventory = Inventory()
         self.map = Map()
+        self.map.player = (0, 0)
         self.player_stats = Player()
-        treasure = self.map.clear_treasure(self.position)
+        treasure = self.map.clear_treasure(self.map.player)
         if treasure:
             self.add_treasure(treasure)
 
         self.inventory_screen = self.small_font.render("Inventory", True, WHITE, BLACK)
         self.stats_screen = self.small_font.render("ARGH", True, WHITE, BLACK)
         
-        
         self.clock = pygame.time.Clock()
         self.direction = 0
         
-        self.map.clear_block(self.position)
-        self.map.set_current_position(self.position)
+        self.map.clear_block(self.map.player)
+        self.map.set_current_position(self.map.player)
         
         self.draw_walls()
         self.draw_stats()
@@ -49,7 +48,7 @@ class Game(object):
         self.draw_darkness()
         self.draw_inventory()
         self.draw_stats()
-        self.screen.blit(self.player_blit, self.position)
+        self.screen.blit(self.player_blit, self.map.player)
         self.screen.blit(self.alert, (0, 790))
         self.run()
 
@@ -148,25 +147,27 @@ class Game(object):
     def move(self, hor, vert):
         ''' Moves the player, given a keypress. 
         '''
-        self.old_row, self.old_col = self.position
+        self.old_row, self.old_col = self.map.player
         row = self.old_row + hor
         col = self.old_col + vert
         if row > (ROWS-1) * TILE_SIZE or row < 0 or col > (COLUMNS-1) * TILE_SIZE or col < 0:
             return
         if self.has_wall(row, col):
             return
-        if self.has_wall(row, col):
+        if self.has_monster(row, col):
             print "I should be entering combat."
-        self.position = (row, col)
-        self.map.clear_block(self.position)
-        self.map.set_current_position(self.position)
-        treasure = self.map.clear_treasure(self.position)
+            return
+        self.map.player = (row, col)
+        self.map.player = (row, col)
+        self.map.clear_block(self.map.player)
+        self.map.set_current_position(self.map.player)
+        treasure = self.map.clear_treasure(self.map.player)
         if treasure:
             self.add_treasure(treasure)
             self.draw_inventory()
-        self.screen.blit(self.player_blit, self.position)
+        self.screen.blit(self.player_blit, self.map.player)
         self.draw_screen_layers()
-        self.screen.blit(self.player_blit, self.position)
+        self.screen.blit(self.player_blit, self.map.player)
         pygame.display.flip()
 
     def draw_screen_layers(self):
@@ -229,7 +230,7 @@ class Game(object):
                         vert = TILE_SIZE
                         hor = 0
                 if event.type == KEYUP:
-                    self.map.move_monsters()
                     self.move(hor, vert)
+                    self.map.move_monsters()
                     hor = 0
                     vert = 0
