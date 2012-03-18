@@ -23,6 +23,8 @@ class Player(object):
     """The player class. Contains level, HP, stats, and deals with combat."""
     def __init__(self):
         self.level = 1
+        self.attack = 5
+        self.defense = 5
         self.current_hp = 10
         self.strength = 1
         self.name = "Dudeguy McAwesomesauce"
@@ -32,17 +34,18 @@ class Player(object):
         return 10 + (self.level-1)*5
 
     @property
-    def defense(self):
+    def get_defense(self):
         return 1
 
     def receive_damage(self, damage):
-        pass
+        self.current_hp -= damage
+        print self.current_hp
 
     def attempt_block(self, attack):
         pass
 
-    def attack(self, attack):
-        pass
+    def get_attack(self):
+        return self.strength
 
 
         

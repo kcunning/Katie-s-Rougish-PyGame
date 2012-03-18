@@ -41,7 +41,7 @@ class Map(object):
                 if not self.treasure[row][col] and not self.walls[row][col]:
                     self.monsters[row][col] = Derpy()
                     break
-            
+
     def get_blank_map(self):
         ''' Returns a map with all values set to 0
         '''

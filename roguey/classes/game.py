@@ -6,6 +6,7 @@ from items import Treasure
 from gamemap import Map
 from monsters import Derpy
 from player import Inventory, Player
+from combat import Combat
 
 class Game(object):
     ''' The game object. Controls rendering the game and moving the player.
@@ -155,7 +156,7 @@ class Game(object):
         if self.has_wall(row, col):
             return
         if self.has_monster(row, col):
-            print "I should be entering combat."
+            Combat(self.player_stats, self.map.monsters[row/TILE_SIZE][col/TILE_SIZE]).fight()
             return
         self.map.player = (row, col)
         self.map.player = (row, col)
