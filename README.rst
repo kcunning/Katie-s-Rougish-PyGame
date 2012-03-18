@@ -16,3 +16,5 @@ Current features:
 * Random chests, with contents
 * Inventory
 * Alert area
+* Combat
+* Character and monster stats
