@@ -126,19 +126,23 @@ class Map(object):
     def move_monsters(self):
         monsters = self.get_all_monsters()
         for monster in monsters.keys():
-            d = random.sample(DIRECTIONS, 1)[0]
-            new_row, new_col = row, col = monsters[monster]
-            if d == "north":
-                new_row -= 1
-            if d == "south":
-                new_row += 1
-            if d == "east":
-                new_col += 1
-            if d == "west":
-                new_col -= 1
-            try:
-                if self.is_block_empty(new_row, new_col) and new_row > 0 and new_col > 0:
-                    self.monsters[new_row][new_col] = monster
-                    self.monsters[row][col] = 0
-            except:
-                pass # Monsters can run into walls, edges, chests, etc. It consumes their turn.
+            if monster.current_hp <= 0:
+                r, c = monsters[monster]
+                self.monsters[r][c] = 0
+            else:
+                d = random.sample(DIRECTIONS, 1)[0]
+                new_row, new_col = row, col = monsters[monster]
+                if d == "north":
+                    new_row -= 1
+                if d == "south":
+                    new_row += 1
+                if d == "east":
+                    new_col += 1
+                if d == "west":
+                    new_col -= 1
+                try:
+                    if self.is_block_empty(new_row, new_col) and new_row > 0 and new_col > 0:
+                        self.monsters[new_row][new_col] = monster
+                        self.monsters[row][col] = 0
+                except:
+                    pass # Monsters can run into walls, edges, chests, etc. It consumes their turn.

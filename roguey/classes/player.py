@@ -39,7 +39,6 @@ class Player(object):
 
     def receive_damage(self, damage):
         self.current_hp -= damage
-        print self.current_hp
 
     def attempt_block(self, attack):
         pass

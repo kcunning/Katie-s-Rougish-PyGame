@@ -157,6 +157,10 @@ class Game(object):
             return
         if self.has_monster(row, col):
             Combat(self.player_stats, self.map.monsters[row/TILE_SIZE][col/TILE_SIZE]).fight()
+            if self.map.monsters[row/TILE_SIZE][col/TILE_SIZE].current_hp <= 0:
+                pass #put death throes here
+            if self.player_stats.current_hp <= 0:
+                self.end_game()
             self.move(0,0)
             return
         self.map.player = (row, col)
@@ -171,6 +175,9 @@ class Game(object):
         self.draw_screen_layers()
         self.screen.blit(self.player_blit, self.map.player)
         pygame.display.flip()
+
+    def end_game(self):
+        sys.exit()
 
     def draw_screen_layers(self):
         self.screen.blit(self.bg, (0, 0))

@@ -14,26 +14,20 @@ class Combat(object):
 		# Player, try to hit the monster!
 		hit_attempt = randint(0, self.player.attack)
 		if hit_attempt == 0:
-			print "A wiff!"
+			pass
 		if hit_attempt > 0 and hit_attempt <= self.monster.defense:
-			print "It barely misses."
+			pass
 		if hit_attempt > self.monster.defense:
 			damage = self.player.get_attack()
 			self.monster.receive_damage(damage)
-			if self.monster.current_hp <= 0:
-				self.kill_monster()
-				return
-			print self.monster.current_hp
+		
 		# Monster, try to hit back.
-
-		hit_attempt = randint(0, self.monster.attack)
-		if hit_attempt == 0:
-			print "Monster wiffs!"
-		if hit_attempt > 0 and hit_attempt <= self.player.defense:
-			print "Monster barely misses", str(hit_attempt)
-		if hit_attempt > self.player.defense:
-			damage = self.monster.get_attack()
-			self.player.receive_damage(damage)
-
-	def kill_monster(self):
-		self.monster = None
+		if self.monster.current_hp > 0:
+			hit_attempt = randint(0, self.monster.attack)
+			if hit_attempt == 0:
+				pass
+			if hit_attempt > 0 and hit_attempt <= self.player.defense:
+				pass
+			if hit_attempt > self.player.defense:
+				damage = self.monster.get_attack()
+				self.player.receive_damage(damage)
