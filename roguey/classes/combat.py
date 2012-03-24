@@ -20,6 +20,9 @@ class Combat(object):
 		if hit_attempt > self.monster.defense:
 			damage = self.player.get_attack()
 			self.monster.receive_damage(damage)
+			if self.monster.current_hp <= 0:
+				self.kill_monster()
+				return
 			print self.monster.current_hp
 		# Monster, try to hit back.
 
@@ -31,3 +34,6 @@ class Combat(object):
 		if hit_attempt > self.player.defense:
 			damage = self.monster.get_attack()
 			self.player.receive_damage(damage)
+
+	def kill_monster(self):
+		self.monster = None

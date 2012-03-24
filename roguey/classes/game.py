@@ -157,6 +157,7 @@ class Game(object):
             return
         if self.has_monster(row, col):
             Combat(self.player_stats, self.map.monsters[row/TILE_SIZE][col/TILE_SIZE]).fight()
+            self.move(0,0)
             return
         self.map.player = (row, col)
         self.map.player = (row, col)
