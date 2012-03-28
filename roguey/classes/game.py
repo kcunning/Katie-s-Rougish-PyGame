@@ -38,7 +38,7 @@ class Game(object):
         
         self.screen.draw_walls(self.map.walls)
         self.screen.draw_stats(player_stats=self.player_stats)
-        self.screen.draw_treasure()
+        self.screen.draw_treasure(self.map.treasure)
         self.screen.draw_monsters()
         self.screen.draw_darkness()
         self.screen.draw_inventory()
