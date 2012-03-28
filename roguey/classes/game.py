@@ -7,6 +7,7 @@ from gamemap import Map
 from monsters import Derpy
 from player import Inventory, Player
 from combat import Combat
+from gamescreen import GameScreen
 
 class Game(object):
     ''' The game object. Controls rendering the game and moving the player.
@@ -16,13 +17,9 @@ class Game(object):
                 Once everything is set up, starts the game.
         '''
         # Set up the screen
-        self.screen = pygame.display.set_mode((1280, 832))
-        self.font = pygame.font.SysFont(None, 48)
-        self.small_font = pygame.font.SysFont(None, 20)
-        self.draw_alert("Welcome to Katie's Roguelike!")
+        self.screen = GameScreen()
+        self.screen.draw_alert("Welcome to Katie's Roguelike!")
         self.bg = pygame.image.load(IMG_DIR + 'rainbowbg.png')
-        self.player_blit = pygame.image.load(IMG_DIR + 'dude.png')
-        self.screen.blit(self.bg, (0,0))
 
         # Set up some game components
         self.inventory = Inventory()
@@ -33,22 +30,19 @@ class Game(object):
         if treasure:
             self.add_treasure(treasure)
 
-        self.inventory_screen = self.small_font.render("Inventory", True, WHITE, BLACK)
-        self.stats_screen = self.small_font.render("ARGH", True, WHITE, BLACK)
-        
         self.clock = pygame.time.Clock()
         self.direction = 0
         
         self.map.clear_block(self.map.player)
         self.map.set_current_position(self.map.player)
         
-        self.draw_walls()
-        self.draw_stats()
-        self.draw_treasure()
-        self.draw_monsters()
-        self.draw_darkness()
-        self.draw_inventory()
-        self.draw_stats()
+        self.screen.draw_walls(self.map.walls)
+        self.screen.draw_stats(player_stats=self.player_stats)
+        self.screen.draw_treasure()
+        self.screen.draw_monsters()
+        self.screen.draw_darkness()
+        self.screen.draw_inventory()
+        self.screen.draw_stats()
         self.screen.blit(self.player_blit, self.map.player)
         self.screen.blit(self.alert, (0, 790))
         self.run()
@@ -105,13 +99,6 @@ class Game(object):
                 if self.map.monsters[row][col] != 0 and self.map.current[row][col] != 0:
                     monster = pygame.image.load(IMG_DIR + 'dumb_monster.png')
                     self.screen.blit(monster, (row*TILE_SIZE, col*TILE_SIZE))
-    
-    def draw_walls(self):
-        for row in range(ROWS):
-            for col in range(COLUMNS):
-                if self.map.walls[row][col] != 0:
-                    wall = pygame.image.load(IMG_DIR + 'wall.png')
-                    self.screen.blit(wall, (row*TILE_SIZE, col*TILE_SIZE))
 
     def draw_darkness(self):
         ''' Draws the darkness and shadows on the board. 0 is dark, 1 is in shadows,
