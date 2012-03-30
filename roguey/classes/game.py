@@ -41,10 +41,8 @@ class Game(object):
         self.screen.draw_treasure(self.map.treasure)
         self.screen.draw_monsters(self.map)
         self.screen.draw_darkness(self.map)
-        self.screen.draw_inventory()
-        self.screen.draw_stats()
-        self.screen.blit(self.player_blit, self.map.player)
-        self.screen.blit(self.alert, (0, 790))
+        self.screen.draw_inventory(self.inventory)
+        self.screen.draw_stats(player_stats=self.player_stats)
         self.run()
 
     def draw_stats(self, color=WHITE):
@@ -55,17 +53,6 @@ class Game(object):
         self.screen.blit(self.stats_screen, (1008, 15))
         self.stats_screen = self.small_font.render("HP: %s/%s" % (str(self.player_stats.current_hp), str(self.player_stats.max_hp)), True, color, BLACK)
         self.screen.blit(self.stats_screen, (1008, 30)) 
-
-    def draw_alert(self, alert, color=WHITE):
-        ''' Draws the alert box at the bottom 
-        '''
-        self.alert = self.font.render(LONG_STRING, True, BLACK, BLACK)
-        self.screen.blit(self.alert, (0, 790))
-        try:
-            pygame.display.flip()
-        except:
-            pass
-        self.alert = self.font.render(alert, True, color, BLACK)
 
     def draw_inventory(self):
         self.screen.blit(self.inventory_screen, (1008, 100))
@@ -167,13 +154,11 @@ class Game(object):
         sys.exit()
 
     def draw_screen_layers(self):
-        self.screen.blit(self.bg, (0, 0))
-        self.draw_treasure()
-        self.draw_walls()
-        self.draw_monsters()
-        self.draw_darkness()
-        self.draw_stats()
-        self.screen.blit(self.alert, (0, 790))
+        self.screen.draw_treasure(self.map.treasure)
+        self.screen.draw_walls(self.map.walls)
+        self.screen.draw_monsters(self.map)
+        self.screen.draw_darkness(self.map)
+        self.screen.draw_stats()
 
     def animate_move(self, hor, vert, blit):
         if vert:
