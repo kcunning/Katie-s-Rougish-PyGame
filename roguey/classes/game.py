@@ -103,6 +103,7 @@ class Game(object):
         sys.exit()
 
     def draw_screen_layers(self):
+        self.screen.draw_background()
         self.screen.draw_treasure(self.map.treasure)
         self.screen.draw_walls(self.map.walls)
         self.screen.draw_monsters(self.map)
