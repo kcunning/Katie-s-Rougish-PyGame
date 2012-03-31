@@ -18,7 +18,6 @@ class Game(object):
         '''
         # Set up the screen
         self.screen = GameScreen()
-        self.screen.draw_alert("Welcome to Katie's Roguelike!")
         self.bg = pygame.image.load(IMG_DIR + 'rainbowbg.png')
 
         # Set up some game components
@@ -50,23 +49,6 @@ class Game(object):
         self.inventory.add_to_inventory(treasure.title)
         self.screen.draw_alert(text)
 
-    def has_wall(self, row, col):
-        row = row/TILE_SIZE
-        col = col/TILE_SIZE
-        if self.map.walls[row][col]:
-            return True
-        else:
-            return False
-
-    def has_monster(self, row, col):
-        row = row/TILE_SIZE
-        col = col/TILE_SIZE
-        if self.map.monsters[row][col]:
-            return True
-        else:
-            return False
-    
-
     def move(self, hor, vert):
         ''' Moves the player, given a keypress. 
         '''
@@ -75,9 +57,9 @@ class Game(object):
         col = self.old_col + vert
         if row > (ROWS-1) * TILE_SIZE or row < 0 or col > (COLUMNS-1) * TILE_SIZE or col < 0:
             return
-        if self.has_wall(row, col):
+        if self.map.has_wall(row, col):
             return
-        if self.has_monster(row, col):
+        if self.map.has_monster(row, col):
             Combat(self.player_stats, self.map.monsters[row/TILE_SIZE][col/TILE_SIZE]).fight()
             if self.map.monsters[row/TILE_SIZE][col/TILE_SIZE].current_hp <= 0:
                 pass #put death throes here
@@ -94,21 +76,13 @@ class Game(object):
             self.add_treasure(treasure)
             self.screen.draw_inventory(self.inventory)
         self.screen.draw_player(self.map.player)
-        self.draw_screen_layers()
+        self.screen.draw_screen_layers(self.map, self.player_stats)
         self.screen.draw_player(self.map.player)
         #self.screen.blit(self.player_blit, self.map.player)
         pygame.display.flip()
 
     def end_game(self):
         sys.exit()
-
-    def draw_screen_layers(self):
-        self.screen.draw_background()
-        self.screen.draw_treasure(self.map.treasure)
-        self.screen.draw_walls(self.map.walls)
-        self.screen.draw_monsters(self.map)
-        self.screen.draw_darkness(self.map)
-        self.screen.draw_stats(player_stats=self.player_stats)
 
     def run(self):
         ''' The main loop of the game.

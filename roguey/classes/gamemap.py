@@ -59,6 +59,22 @@ class Map(object):
             return True
         else:
             return False
+
+    def has_wall(self, row, col):
+        row = row/TILE_SIZE
+        col = col/TILE_SIZE
+        if self.walls[row][col]:
+            return True
+        else:
+            return False
+
+    def has_monster(self, row, col):
+        row = row/TILE_SIZE
+        col = col/TILE_SIZE
+        if self.monsters[row][col]:
+            return True
+        else:
+            return False
     
     def set_current_position(self, position):
         self.current = self.get_blank_map()
