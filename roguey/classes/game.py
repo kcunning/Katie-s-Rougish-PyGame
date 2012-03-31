@@ -45,12 +45,15 @@ class Game(object):
         self.run()
 
     def add_treasure(self, treasure):
+        ''' Adds the treasure to the player's inventory
+        '''
         text = "You found a %s. %s" % (treasure.title, treasure.description)
         self.inventory.add_to_inventory(treasure.title)
         self.screen.draw_alert(text)
 
     def move(self, hor, vert):
         ''' Moves the player, given a keypress. 
+            Also evaluates if the player needs to fight or pick up some treasure.
         '''
         self.old_row, self.old_col = self.map.player
         row = self.old_row + hor
@@ -77,11 +80,11 @@ class Game(object):
             self.screen.draw_inventory(self.inventory)
         self.screen.draw_player(self.map.player)
         self.screen.draw_screen_layers(self.map, self.player_stats)
-        self.screen.draw_player(self.map.player)
-        #self.screen.blit(self.player_blit, self.map.player)
-        pygame.display.flip()
 
     def end_game(self):
+        ''' The exit screen for when the player has died, or completed the game. 
+            So far, all it does is exit the game.
+        '''
         sys.exit()
 
     def run(self):
