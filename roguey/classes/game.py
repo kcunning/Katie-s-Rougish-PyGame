@@ -34,14 +34,9 @@ class Game(object):
         
         self.map.clear_block(self.map.player)
         self.map.set_current_position(self.map.player)
+
+        self.screen.draw_screen_layers(player_stats=self.player_stats, map=self.map)
         
-        self.screen.draw_walls(self.map.walls)
-        self.screen.draw_stats(player_stats=self.player_stats)
-        self.screen.draw_treasure(self.map.treasure)
-        self.screen.draw_monsters(self.map)
-        self.screen.draw_darkness(self.map)
-        self.screen.draw_inventory(self.inventory)
-        self.screen.draw_stats(player_stats=self.player_stats)
         self.run()
 
     def add_treasure(self, treasure):
