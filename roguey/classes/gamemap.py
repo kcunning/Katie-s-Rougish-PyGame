@@ -59,7 +59,6 @@ class Map(object):
         print "Checking room"
         for i in range(0, length):
             for j in range(0, height):
-                print coord[0] + j, coord[1] + i
                 try:
                     if self.rooms[coord[0]+j][coord[1]+i]:
                         return False
@@ -81,6 +80,10 @@ class Map(object):
         for i in range(0, room.height):
             self.walls[room.start[0]][room.start[1]+i] = 1
             self.walls[room.start[0]+room.width-1][room.start[1]+i] = 1
+        # fill in the floor
+        for x in range (1, room.width-1):
+            for y in range (1, room.height-1):
+                self.rooms[room.start[0]+x][room.start[1]+y] = 1
 
         
 
