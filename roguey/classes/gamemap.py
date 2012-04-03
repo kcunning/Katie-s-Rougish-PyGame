@@ -1,6 +1,7 @@
 # INTIALISATION
 import pygame, math, sys, random
 from pygame.locals import *
+from random import randint
 
 from constants import *
 from items import Treasure
@@ -20,6 +21,7 @@ class Map(object):
         self.walls = self.get_blank_map()
         self.monsters = self.get_blank_map()
         self.player = (0,0)
+        self.rooms = self.get_blank_map()
         for i in range(TREASURES):
             while 1:
                 col = random.randint(0, COLUMNS-1)
@@ -27,13 +29,9 @@ class Map(object):
                 if not self.treasure[row][col]:
                     self.treasure[row][col] = Treasure()
                     break
-        for i in range(WALLS):
-            while 1:
-                col = random.randint(0, COLUMNS-1)
-                row = random.randint(0, ROWS-1)
-                if not self.treasure[row][col] and not self.walls[row][col]:
-                    self.walls[row][col] = 1
-                    break
+        
+        self.get_rooms()
+
         for i in range(MONSTERS):
             while 1:
                 col = random.randint(0, COLUMNS-1)
@@ -41,6 +39,50 @@ class Map(object):
                 if not self.treasure[row][col] and not self.walls[row][col]:
                     self.monsters[row][col] = Derpy()
                     break
+
+    def get_rooms(self):
+        # Set initial room
+        room = self.check_room(coord=(0,0), height=5, length=5)
+        rooms = 1
+        while rooms < 5:
+            x = randint(0, COLUMNS-1)
+            y = randint(0, ROWS)
+            print (x, y)
+            room = self.check_room(coord=(x,y), height=5, length=5)
+            if room:
+                rooms += 1
+
+            
+    def check_room(self, coord, height, length):
+        ''' Are all the spaces in a room free?
+        '''
+        print "Checking room"
+        for i in range(0, length):
+            for j in range(0, height):
+                print coord[0] + j, coord[1] + i
+                try:
+                    if self.rooms[coord[0]+j][coord[1]+i]:
+                        return False
+                except:
+                    print coord[0]+j, coord[1] + i, "out of bounds."
+                    return False
+        room = Room(start=coord)
+        self.create_room(room)
+        return room
+
+
+    def create_room(self, room):
+        print "Creating room"
+        # make top and bottom walls
+        for i in range(0, room.width):
+            self.walls[room.start[0]+i][room.start[1]] = 1
+            self.walls[room.start[0]+i][room.start[1]+room.height-1] = 1
+        # make side walls
+        for i in range(0, room.height):
+            self.walls[room.start[0]][room.start[1]+i] = 1
+            self.walls[room.start[0]+room.width-1][room.start[1]+i] = 1
+
+        
 
     def get_blank_map(self):
         ''' Returns a map with all values set to 0
@@ -136,7 +178,7 @@ class Map(object):
     def print_ascii_map(self):
         ''' Prints an ascii map to the console. For troubleshooting only.
         '''
-        for row in self.monsters:
+        for row in self.rooms:
             print row, row.__len__()
 
     def move_monsters(self):
@@ -162,3 +204,12 @@ class Map(object):
                         self.monsters[row][col] = 0
                 except:
                     pass # Monsters can run into walls, edges, chests, etc. It consumes their turn.
+
+class Room(object):
+
+    def __init__(self, height=5, width=5, start=(0,0)):
+        self.title = "Generic room"
+        self.start = start
+        self.width = width
+        self.height = height
+        self.end = (self.start[0]+self.width, self.start[1]+self.width)
