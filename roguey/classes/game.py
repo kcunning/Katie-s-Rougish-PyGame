@@ -23,7 +23,7 @@ class Game(object):
         # Set up some game components
         self.inventory = Inventory()
         self.map = Map()
-        self.map.player = (1, 1)
+        self.map.player = (1*TILE_SIZE, 1*TILE_SIZE)
         self.player_stats = Player()
         treasure = self.map.clear_treasure(self.map.player)
         if treasure:

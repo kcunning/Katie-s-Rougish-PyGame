@@ -74,7 +74,8 @@ class GameScreen(object):
         '''
         for row in range(ROWS):
             for col in range(COLUMNS):
-                if map.monsters[row][col] != 0 and map.current[row][col] != 0:
+                #if map.monsters[row][col] != 0 and map.current[row][col] != 0:
+                if map.monsters[row][col] != 0:
                     monster = pygame.image.load(IMG_DIR + 'dumb_monster.png')
                     self.screen.blit(monster, (row*TILE_SIZE, col*TILE_SIZE))
     
@@ -114,10 +115,10 @@ class GameScreen(object):
         #self.draw_treasure(map.treasure)
         self.draw_walls(map.rooms, 'floor.png')
         self.draw_walls(map.walls, 'wall.png')
-        #self.draw_monsters(map)
+        self.draw_monsters(map)
         #self.draw_darkness(map)
         #self.draw_stats(player_stats=player_stats)
-        #self.draw_player(coord=map.player)
+        self.draw_player(coord=map.player)
         pygame.display.flip()
 
     def animate_move(self, hor, vert, blit):

@@ -36,7 +36,7 @@ class Map(object):
             while 1:
                 col = random.randint(0, COLUMNS-1)
                 row = random.randint(0, COLUMNS-1)
-                if not self.treasure[row][col] and not self.walls[row][col]:
+                if not self.treasure[row][col] and self.rooms[row][col]:
                     self.monsters[row][col] = Derpy()
                     break
 
