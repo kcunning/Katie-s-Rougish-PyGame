@@ -1,7 +1,7 @@
 # INTIALISATION
 import pygame, math, sys, random
 from pygame.locals import *
-from random import randint
+from random import randint, choice
 
 from constants import *
 from items import Treasure
@@ -70,7 +70,17 @@ class Map(object):
                     return False
         room = Room(start=coord, height=height, width=length)
         self.create_room(room)
+        # Make a door
+        self.make_random_door(room)
         return room
+
+    def make_random_door(self, room):
+        wall = choice(DIRECTIONS)
+        if wall in ['north', 'south']:
+            block = randint(1, room.height)
+        else:
+            block = randint(1, room.width)
+        print "Breaking %s block on %s wall." % (block, wall)
 
 
     def create_room(self, room):
