@@ -44,34 +44,36 @@ class Map(object):
         # Set initial room
         room = self.check_room(coord=(0,0), height=5, length=5)
         rooms = 1
-        while rooms < 5:
+        keep_going = 50
+        while rooms <= MAX_ROOMS and keep_going:
+            height = randint(4,7)
+            length = randint(4,7)
             x = randint(0, COLUMNS-1)
             y = randint(0, ROWS)
-            print (x, y)
-            room = self.check_room(coord=(x,y), height=5, length=5)
+            room = self.check_room(coord=(x,y), height=height, length=length)
             if room:
                 rooms += 1
+            else:
+                keep_going -=1
 
             
     def check_room(self, coord, height, length):
         ''' Are all the spaces in a room free?
         '''
-        print "Checking room"
-        for i in range(0, length):
-            for j in range(0, height):
-                try:
-                    if self.rooms[coord[0]+j][coord[1]+i]:
-                        return False
-                except:
-                    print coord[0]+j, coord[1] + i, "out of bounds."
+        for i in range(0, height):
+            for j in range(0, length):
+                if coord[1] + i > COLUMNS-1:
                     return False
-        room = Room(start=coord)
+                if coord[0] + j > ROWS-1:
+                    return False
+                if self.rooms[coord[0]+j][coord[1]+i]:
+                    return False
+        room = Room(start=coord, height=height, width=length)
         self.create_room(room)
         return room
 
 
     def create_room(self, room):
-        print "Creating room"
         # make top and bottom walls
         for i in range(0, room.width):
             self.walls[room.start[0]+i][room.start[1]] = 1

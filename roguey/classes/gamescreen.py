@@ -78,13 +78,13 @@ class GameScreen(object):
                     monster = pygame.image.load(IMG_DIR + 'dumb_monster.png')
                     self.screen.blit(monster, (row*TILE_SIZE, col*TILE_SIZE))
     
-    def draw_walls(self, walls):
+    def draw_walls(self, walls, filename):
         ''' Draws walls on the game map
         '''
         for row in range(ROWS):
             for col in range(COLUMNS):
                 if walls[row][col] != 0:
-                    wall = pygame.image.load(IMG_DIR + 'wall.png')
+                    wall = pygame.image.load(IMG_DIR + filename)
                     self.screen.blit(wall, (row*TILE_SIZE, col*TILE_SIZE))
 
     def draw_darkness(self, map):
@@ -112,7 +112,8 @@ class GameScreen(object):
         '''
         self.draw_background()
         #self.draw_treasure(map.treasure)
-        self.draw_walls(map.walls)
+        self.draw_walls(map.rooms, 'floor.png')
+        self.draw_walls(map.walls, 'wall.png')
         #self.draw_monsters(map)
         #self.draw_darkness(map)
         #self.draw_stats(player_stats=player_stats)
