@@ -112,12 +112,12 @@ class GameScreen(object):
         ''' Draws the layers of the game screen
         '''
         self.draw_background()
-        #self.draw_treasure(map.treasure)
         self.draw_walls(map.rooms, 'floor.png')
         self.draw_walls(map.walls, 'wall.png')
+        self.draw_treasure(map.treasure)
         self.draw_monsters(map)
         #self.draw_darkness(map)
-        #self.draw_stats(player_stats=player_stats)
+        self.draw_stats(player_stats=player_stats)
         self.draw_player(coord=map.player)
         pygame.display.flip()
 

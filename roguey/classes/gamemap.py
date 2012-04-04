@@ -21,16 +21,16 @@ class Map(object):
         self.walls = self.get_blank_map()
         self.monsters = self.get_blank_map()
         self.player = (0,0)
-        self.rooms = self.get_blank_map()
+        self.rooms = self.get_blank_map()      
+        self.get_rooms()
+
         for i in range(TREASURES):
             while 1:
                 col = random.randint(0, COLUMNS-1)
                 row = random.randint(0, ROWS-1)
-                if not self.treasure[row][col]:
+                if not self.treasure[row][col] and self.rooms[row][col]:
                     self.treasure[row][col] = Treasure()
                     break
-        
-        self.get_rooms()
 
         for i in range(MONSTERS):
             while 1:
