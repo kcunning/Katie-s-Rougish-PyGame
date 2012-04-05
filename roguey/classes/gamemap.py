@@ -45,6 +45,7 @@ class Map(object):
     def get_rooms(self):
         # Set initial room
         room = self.check_room(coord=(0,0), height=5, length=5)
+        self.roomlist.append(room)
         rooms = 1
         keep_going = 50
         while rooms <= MAX_ROOMS and keep_going:
