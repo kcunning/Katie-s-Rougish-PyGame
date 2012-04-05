@@ -21,7 +21,9 @@ class Map(object):
         self.walls = self.get_blank_map()
         self.monsters = self.get_blank_map()
         self.player = (0,0)
-        self.rooms = self.get_blank_map()      
+        self.rooms = self.get_blank_map() 
+        self.roomlist = []
+
         self.get_rooms()
 
         for i in range(TREASURES):
@@ -53,8 +55,11 @@ class Map(object):
             room = self.check_room(coord=(x,y), height=height, length=length)
             if room:
                 rooms += 1
+                self.roomlist.append(room)
             else:
                 keep_going -=1
+        for room in self.roomlist:
+            self.make_random_door(room)
 
             
     def check_room(self, coord, height, length):
@@ -70,17 +75,23 @@ class Map(object):
                     return False
         room = Room(start=coord, height=height, width=length)
         self.create_room(room)
-        # Make a door
-        self.make_random_door(room)
         return room
 
     def make_random_door(self, room):
         wall = choice(DIRECTIONS)
         if wall in ['north', 'south']:
-            block = randint(1, room.height)
+            block = randint(1, room.width-2)
         else:
-            block = randint(1, room.width)
+            block = randint(1, room.height-2)
         print "Breaking %s block on %s wall." % (block, wall)
+        if wall == 'north':
+            self.walls[room.start[0]+block][room.start[1]] = 0
+        if wall == 'south':
+            self.walls[room.start[0]+block][room.start[1]+room.height-1] = 0
+        if wall == 'east':
+            self.walls[room.start[0]][room.start[1]+block] = 0
+        if wall == 'west':
+            self.walls[room.start[0]+room.width-1][room.start[1]+block] = 0
 
 
     def create_room(self, room):
