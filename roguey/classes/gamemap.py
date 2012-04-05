@@ -117,7 +117,7 @@ class Map(object):
             if self.walls[next[0]][next[1]]:
                 return False
             else:
-                self.walls[check[0]][check[1]] = 0
+                self.walls[check[0]][check_door[1]] = 0
                 return True
         return True
 
