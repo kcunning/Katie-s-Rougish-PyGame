@@ -79,20 +79,47 @@ class Map(object):
         return room
 
     def make_random_door(self, room):
-        wall = choice(DIRECTIONS)
-        if wall in ['north', 'south']:
-            block = randint(1, room.width-2)
-        else:
-            block = randint(1, room.height-2)
-        print "Breaking %s block on %s wall." % (block, wall)
-        if wall == 'north':
-            self.walls[room.start[0]+block][room.start[1]] = 0
-        if wall == 'south':
-            self.walls[room.start[0]+block][room.start[1]+room.height-1] = 0
-        if wall == 'east':
-            self.walls[room.start[0]][room.start[1]+block] = 0
-        if wall == 'west':
-            self.walls[room.start[0]+room.width-1][room.start[1]+block] = 0
+        while True:
+            wall = choice(DIRECTIONS)
+            if wall in ['north', 'south']:
+                block = randint(1, room.width-2)
+            else:
+                block = randint(1, room.height-2)
+            if wall == 'north':
+                coord = (room.start[0]+block,room.start[1])
+                check = (coord[0], coord[1]-1)
+                next = (coord[0], coord[1]-2)
+            if wall == 'south':
+                coord = (room.start[0]+block, room.start[1]+room.height-1)
+                check = (coord[0], coord[1]+1)
+                next = (coord[0], coord[1]+1)
+            if wall == 'east':
+                coord = (room.start[0],room.start[1]+block)
+                check = (coord[0]-1, coord[1])
+                next = (coord[0]-2, coord[1])
+            if wall == 'west':
+                coord = (room.start[0]+room.width-1, room.start[1]+block)
+                check = (coord[0]+1, coord[1])
+                next = (coord[0]+2, coord[1])
+            door = self.check_door(coord, check, next)
+            if door:
+                self.walls[coord[0]][coord[1]] = 0
+                return
+
+    def check_door(self, coord, check, next):
+        print coord, check, next
+        # Is it at the bounds?
+        if check[0] < 0 or check[1] < 0:
+            return False
+        # Is it next to a wall?
+        if self.walls[check[0]][check[1]]:
+            # Is that wall next to another wall?
+            if self.walls[next[0]][next[1]]:
+                return False
+            else:
+                self.walls[check[0]][check[1]] = 0
+                return True
+        return True
 
 
     def create_room(self, room):
