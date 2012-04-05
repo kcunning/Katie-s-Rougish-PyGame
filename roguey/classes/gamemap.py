@@ -112,13 +112,18 @@ class Map(object):
         if check[0] < 0 or check[1] < 0:
             return False
         # Is it next to a wall?
-        if self.walls[check[0]][check[1]]:
-            # Is that wall next to another wall?
-            if self.walls[next[0]][next[1]]:
-                return False
-            else:
-                self.walls[check[0]][check_door[1]] = 0
-                return True
+        try:
+            if self.walls[check[0]][check[1]]:
+                # Is that wall next to another wall?
+                if self.walls[next[0]][next[1]]:
+                    return False
+                else:
+                    try:
+                        self.walls[check[0]][check[1]] = 0
+                    except:
+                        pass # Sometimes, we're one away from the border. That's okay.
+        except:
+            return False
         return True
 
 
