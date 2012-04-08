@@ -1,4 +1,5 @@
-import os
+from os.path import abspath, dirname
+
 MOVEMENT_SIZE = 12
 RADIUS = 2
 BLACK = (0,0,0)
@@ -18,4 +19,4 @@ ALL_TREASURES = {
                 }
 LONG_STRING = "X" * 50
 
-IMG_DIR = os.getcwd() + "/roguey/images/"
+IMG_DIR = dirname(dirname(abspath(__file__))) + "/images/"
