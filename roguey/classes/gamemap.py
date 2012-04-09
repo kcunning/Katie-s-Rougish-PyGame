@@ -25,6 +25,9 @@ class Map(object):
         self.roomlist = []
 
         self.get_rooms()
+        self.connect_rooms()
+        for room in self.roomlist:
+            print room.start
 
         for i in range(TREASURES):
             while 1:
@@ -62,6 +65,21 @@ class Map(object):
         for room in self.roomlist:
             self.make_random_door(room)
 
+    def connect_rooms(self):
+        for room in self.roomlist:
+            
+            i = self.roomlist.index(room)
+            try:
+                next = self.roomlist[i+1]
+            except:
+                return
+            print room.door, "->", next.door
+            for x in range(room.door[0], next.door[0]+1):
+                if self.walls[x][room.door[1]]:
+                    self.walls[x][room.door[1]] = 0
+                self.floor[x][room.door[1]] = 1
+            for y in range(room.door[1], next.door[1]+1):
+                print y
             
     def check_room(self, coord, height, length):
         ''' Are all the spaces in a room free?
@@ -104,10 +122,11 @@ class Map(object):
             door = self.check_door(coord, check, next)
             if door:
                 self.walls[coord[0]][coord[1]] = 0
+                self.floor[coord[0]][coord[1]] = 2
+                room.door = (coord[0],coord[1])
                 return
 
     def check_door(self, coord, check, next):
-        print coord, check, next
         # Is it at the bounds?
         if check[0] < 0 or check[1] < 0:
             return False
@@ -272,3 +291,4 @@ class Room(object):
         self.width = width
         self.height = height
         self.end = (self.start[0]+self.width, self.start[1]+self.width)
+        self.door = []
