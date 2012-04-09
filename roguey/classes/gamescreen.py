@@ -112,7 +112,7 @@ class GameScreen(object):
         ''' Draws the layers of the game screen
         '''
         self.draw_background()
-        self.draw_walls(map.rooms, 'floor.png')
+        self.draw_walls(map.floor, 'floor.png')
         self.draw_walls(map.walls, 'wall.png')
         self.draw_treasure(map.treasure)
         self.draw_monsters(map)

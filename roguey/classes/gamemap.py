@@ -21,7 +21,7 @@ class Map(object):
         self.walls = self.get_blank_map()
         self.monsters = self.get_blank_map()
         self.player = (0,0)
-        self.rooms = self.get_blank_map() 
+        self.floor = self.get_blank_map() 
         self.roomlist = []
 
         self.get_rooms()
@@ -30,7 +30,7 @@ class Map(object):
             while 1:
                 col = random.randint(0, COLUMNS-1)
                 row = random.randint(0, ROWS-1)
-                if not self.treasure[row][col] and self.rooms[row][col]:
+                if not self.treasure[row][col] and self.floor[row][col]:
                     self.treasure[row][col] = Treasure()
                     break
 
@@ -38,7 +38,7 @@ class Map(object):
             while 1:
                 col = random.randint(0, COLUMNS-1)
                 row = random.randint(0, COLUMNS-1)
-                if not self.treasure[row][col] and self.rooms[row][col]:
+                if not self.treasure[row][col] and self.floor[row][col]:
                     self.monsters[row][col] = Derpy()
                     break
 
@@ -72,7 +72,7 @@ class Map(object):
                     return False
                 if coord[0] + j > ROWS-1:
                     return False
-                if self.rooms[coord[0]+j][coord[1]+i]:
+                if self.floor[coord[0]+j][coord[1]+i]:
                     return False
         room = Room(start=coord, height=height, width=length)
         self.create_room(room)
@@ -139,7 +139,7 @@ class Map(object):
         # fill in the floor
         for x in range (1, room.width-1):
             for y in range (1, room.height-1):
-                self.rooms[room.start[0]+x][room.start[1]+y] = 1
+                self.floor[room.start[0]+x][room.start[1]+y] = 1
 
         
 
@@ -237,7 +237,7 @@ class Map(object):
     def print_ascii_map(self):
         ''' Prints an ascii map to the console. For troubleshooting only.
         '''
-        for row in self.rooms:
+        for row in self.floor:
             print row, row.__len__()
 
     def move_monsters(self):
