@@ -72,14 +72,28 @@ class Map(object):
             try:
                 next = self.roomlist[i+1]
             except:
-                return
+                next = self.roomlist[0]
             print room.door, "->", next.door
-            for x in range(room.door[0], next.door[0]+1):
+            if room.door[0] < next.door[0]:
+                start = room.door[0]
+                end = next.door[0]
+            else:
+                start = next.door[0]
+                end = room.door[0]
+            for x in range(start, end):
                 if self.walls[x][room.door[1]]:
                     self.walls[x][room.door[1]] = 0
                 self.floor[x][room.door[1]] = 1
-            for y in range(room.door[1], next.door[1]+1):
-                print y
+            if room.door[1] < next.door[1]:
+                start = room.door[1]
+                end = next.door[1]
+            else:
+                start = next.door[1]
+                end = room.door[1]
+            for y in range(start, end):
+                if self.walls[room.door[0]][y]:
+                    self.walls[room.door[0]][y] = 0
+                self.floor[room.door[0]][y] = 1
             
     def check_room(self, coord, height, length):
         ''' Are all the spaces in a room free?
