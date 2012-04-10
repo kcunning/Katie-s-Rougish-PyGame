@@ -97,8 +97,9 @@ class Map(object):
                 start = next.door[1]
                 end = room.door[1]
             for y in range(start, end):
-                self.walls[room.door[0]][y] = 0
-                self.floor[room.door[0]][y] = 1
+                print room.door[0], y
+                self.walls[next.door[0]][y] = 0
+                self.floor[next.door[0]][y] = 1
 
     def check_room(self, coord, height, length):
         ''' Are all the spaces in a room free?
