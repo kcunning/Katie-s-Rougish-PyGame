@@ -44,6 +44,13 @@ class Map(object):
                 if not self.treasure[row][col] and self.floor[row][col]:
                     self.monsters[row][col] = Derpy()
                     break
+        self.fill_map()
+
+    def fill_map(self):
+        for i in range(ROWS):
+            for j in range(COLUMNS):
+                    if not self.floor[i][j]:
+                        self.walls[i][j] = 1
 
     def get_rooms(self):
         # Set initial room
@@ -67,7 +74,6 @@ class Map(object):
 
     def connect_rooms(self):
         for room in self.roomlist:
-            
             i = self.roomlist.index(room)
             try:
                 next = self.roomlist[i+1]
@@ -81,8 +87,8 @@ class Map(object):
                 start = next.door[0]
                 end = room.door[0]
             for x in range(start, end):
-                if self.walls[x][room.door[1]]:
-                    self.walls[x][room.door[1]] = 0
+                print x, room.door[1]
+                self.walls[x][room.door[1]] = 0
                 self.floor[x][room.door[1]] = 1
             if room.door[1] < next.door[1]:
                 start = room.door[1]
@@ -91,10 +97,9 @@ class Map(object):
                 start = next.door[1]
                 end = room.door[1]
             for y in range(start, end):
-                if self.walls[room.door[0]][y]:
-                    self.walls[room.door[0]][y] = 0
+                self.walls[room.door[0]][y] = 0
                 self.floor[room.door[0]][y] = 1
-            
+
     def check_room(self, coord, height, length):
         ''' Are all the spaces in a room free?
         '''
