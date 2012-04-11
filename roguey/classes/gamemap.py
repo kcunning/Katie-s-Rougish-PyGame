@@ -26,8 +26,6 @@ class Map(object):
 
         self.get_rooms()
         self.connect_rooms()
-        for room in self.roomlist:
-            print room.start
 
         for i in range(TREASURES):
             while 1:
@@ -59,8 +57,8 @@ class Map(object):
         rooms = 1
         keep_going = 50
         while rooms <= MAX_ROOMS and keep_going:
-            height = randint(4,7)
-            length = randint(4,7)
+            height = randint(4,10)
+            length = randint(4,10)
             x = randint(0, COLUMNS-1)
             y = randint(0, ROWS)
             room = self.check_room(coord=(x,y), height=height, length=length)
@@ -79,7 +77,6 @@ class Map(object):
                 next = self.roomlist[i+1]
             except:
                 next = self.roomlist[0]
-            print room.door, "->", next.door
             if room.door[0] < next.door[0]:
                 start = room.door[0]
                 end = next.door[0]
@@ -87,7 +84,6 @@ class Map(object):
                 start = next.door[0]
                 end = room.door[0]
             for x in range(start, end):
-                print x, room.door[1]
                 self.walls[x][room.door[1]] = 0
                 self.floor[x][room.door[1]] = 1
             if room.door[1] < next.door[1]:
@@ -97,7 +93,6 @@ class Map(object):
                 start = next.door[1]
                 end = room.door[1]
             for y in range(start, end):
-                print room.door[0], y
                 self.walls[next.door[0]][y] = 0
                 self.floor[next.door[0]][y] = 1
 
