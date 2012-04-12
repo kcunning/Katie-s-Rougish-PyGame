@@ -43,7 +43,7 @@ class Game(object):
         ''' Adds the treasure to the player's inventory
         '''
         text = "You found a %s. %s" % (treasure.title, treasure.description)
-        self.inventory.add_to_inventory(treasure.title)
+        self.inventory.add_to_inventory(treasure, self.player_stats)
         self.screen.draw_alert(text)
 
     def move(self, hor, vert):
@@ -73,6 +73,7 @@ class Game(object):
         if treasure:
             self.add_treasure(treasure)
             self.screen.draw_inventory(self.inventory)
+            self.screen.draw_equipment(self.player_stats.equipped)
         self.screen.draw_player(self.map.player)
         self.screen.draw_screen_layers(self.map, self.player_stats)
 

@@ -11,13 +11,12 @@ MAX_ROOMS = 10
 MONSTERS = 12
 TILE_SIZE = 48
 DIRECTIONS = ['north', 'south', 'east', 'west']
-ALL_TREASURES = {
-                "hat": "Quite cunning",
-                "sqord": "Knock-off sword. Probably from Ikea.",
-                "book": "What the hell are you going to do with this?",
-                "rainbow": "Joy in a box."
-                }
 LONG_STRING = "X" * 50
+
+EQUIPMENT_TYPES = ('hat', 'shirt', 'pants', 'shoes', 'back', 'neck', 'hands', 'weapon')
+START_EQUIPMENT = {}
+for treasure in EQUIPMENT_TYPES:
+	START_EQUIPMENT[treasure] = None
 
 TREASURE_TYPES = ('hat', 'shirt', 'pants', 'shoes', 'back', 'neck', 'hands', 'weapon', 'trash')
 

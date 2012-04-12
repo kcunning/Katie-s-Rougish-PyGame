@@ -12,13 +12,18 @@ class Inventory(object):
     def get_items(self):
         return self.inventory.keys()
 
-    def add_to_inventory(self, item):
+    def add_to_inventory(self, item, player):
         ''' Adds an item to the inventory
         '''
-        try:
-            self.inventory[item] += 1
-        except:
-            self.inventory[item] = 1
+        if item.type == "trash":
+            return
+        if player.equipped[item.type]:
+            try:
+                self.inventory[item] += 1
+            except:
+                self.inventory[item] = 1
+        else:
+            player.equip_item(item)
 
 
 class Player(object):
@@ -51,6 +56,9 @@ class Player(object):
 
     def get_attack(self):
         return self.strength
+
+    def equip_item(self, item):
+        self.equipped[item.type] = item
 
 
         

@@ -14,8 +14,11 @@ class GameScreen(object):
         self.player_blit = pygame.image.load(IMG_DIR + 'dude.png')
         self.screen.blit(self.bg, (0,0))
         self.inventory_screen = self.small_font.render("Inventory", True, WHITE, BLACK)
+        self.equipment_screen = self.small_font.render("Equipment", True, WHITE, BLACK)
         self.draw_alert("Welcome to Katie's Roguelike!")
         self.stats_screen = self.small_font.render("ARGH", True, WHITE, BLACK)
+        self.draw_inventory()
+        self.draw_equipment()
         pygame.display.flip()
 
     def draw_player(self, coord):
@@ -47,18 +50,39 @@ class GameScreen(object):
         self.screen.blit(self.alert, (0, 790))
         pygame.display.flip()
 
-    def draw_inventory(self, inventory):
+    def draw_equipment(self, equipment=START_EQUIPMENT):
+        self.screen.blit(self.equipment_screen, (1008, 200))
+        for i in range(equipment.keys().__len__()):
+            line = self.small_font.render(LONG_STRING, True, BLACK, BLACK)
+            self.screen.blit(line, (1008, ((i+1)*15)+200))
+        pygame.display.flip()
+        i = 1
+        for slot in equipment.keys():
+            try:
+                line_text = slot + ":   " + equipment[slot].title
+            except:
+                line_text = slot + ":   "
+            line = self.small_font.render(line_text, True, WHITE, BLACK)
+            self.screen.blit(line, (1008, i*15+200))
+            i += 1
+
+
+
+    def draw_inventory(self, inventory=None):
         ''' Renders the inventory for the user
         '''
-        self.screen.blit(self.inventory_screen, (1008, 100))
-        items = inventory.get_items()
+        self.screen.blit(self.inventory_screen, (1008, 400))
+        if inventory:
+            items = inventory.get_items()
+        else:
+            items = []
         for i in range(items.__len__()):
             line = self.small_font.render(LONG_STRING, True, BLACK, BLACK)
-            self.screen.blit(line, (1008, ((i+1)*15)+100))
+            self.screen.blit(line, (1008, ((i+1)*15)+400))
         pygame.display.flip()
         for item in items:
-            line = self.small_font.render(item, True, WHITE, BLACK)
-            self.screen.blit(line, (1008, (items.index(item)+1)*15+100))
+            line = self.small_font.render(item.title, True, WHITE, BLACK)
+            self.screen.blit(line, (1008, (items.index(item)+1)*15+400))
 
     def draw_treasure(self, treasure_map):
         ''' Draws the treasure chests yet to be opened.
