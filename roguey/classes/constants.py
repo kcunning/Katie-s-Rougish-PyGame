@@ -19,4 +19,6 @@ ALL_TREASURES = {
                 }
 LONG_STRING = "X" * 50
 
+TREASURE_TYPES = ('hat', 'shirt', 'pants', 'shoes', 'back', 'neck', 'hands', 'weapon', 'trash')
+
 IMG_DIR = dirname(dirname(abspath(__file__))) + "/images/"

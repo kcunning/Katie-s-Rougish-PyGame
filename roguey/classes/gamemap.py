@@ -1,5 +1,5 @@
 # INTIALISATION
-import pygame, math, sys, random
+import pygame, math, sys, random, pickle
 from pygame.locals import *
 from random import randint, choice
 
@@ -27,12 +27,13 @@ class Map(object):
         self.get_rooms()
         self.connect_rooms()
 
+        all_treasures = self.get_all_treasures()
         for i in range(TREASURES):
             while 1:
                 col = random.randint(0, COLUMNS-1)
                 row = random.randint(0, ROWS-1)
                 if not self.treasure[row][col] and self.floor[row][col]:
-                    self.treasure[row][col] = Treasure()
+                    self.treasure[row][col] = choice(all_treasures)
                     break
 
         for i in range(MONSTERS):
@@ -43,6 +44,12 @@ class Map(object):
                     self.monsters[row][col] = Derpy()
                     break
         self.fill_map()
+
+    def get_all_treasures(self):
+        f = open("roguey/resources/items.pk")
+        treasures = pickle.load(f)
+        f.close()
+        return treasures
 
     def fill_map(self):
         for i in range(ROWS):

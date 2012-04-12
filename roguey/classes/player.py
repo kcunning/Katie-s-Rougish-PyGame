@@ -1,3 +1,5 @@
+from constants import *
+
 class Inventory(object):
     ''' The inventory for the player.
     '''
@@ -28,6 +30,10 @@ class Player(object):
         self.current_hp = 10
         self.strength = 1
         self.name = "Dudeguy McAwesomesauce"
+        self.equipped = {}
+
+        for treasure in TREASURE_TYPES:
+            self.equipped[treasure] = None
 
     @property
     def max_hp(self):
