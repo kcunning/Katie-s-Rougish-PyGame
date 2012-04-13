@@ -51,13 +51,16 @@ class GameScreen(object):
         pygame.display.flip()
 
     def draw_equipment(self, equipment=START_EQUIPMENT):
+        ''' Renders the equipment. Expect it to be exchanged for something
+            awesomer
+        ''' 
         self.screen.blit(self.equipment_screen, (1008, 200))
         for i in range(equipment.keys().__len__()):
             line = self.small_font.render(LONG_STRING, True, BLACK, BLACK)
             self.screen.blit(line, (1008, ((i+1)*15)+200))
         pygame.display.flip()
         i = 1
-        for slot in equipment.keys():
+        for slot in EQUIPMENT_TYPES:
             try:
                 line_text = slot + ":   " + equipment[slot].title
             except:
@@ -65,8 +68,7 @@ class GameScreen(object):
             line = self.small_font.render(line_text, True, WHITE, BLACK)
             self.screen.blit(line, (1008, i*15+200))
             i += 1
-
-
+        pygame.display.flip()
 
     def draw_inventory(self, inventory=None):
         ''' Renders the inventory for the user

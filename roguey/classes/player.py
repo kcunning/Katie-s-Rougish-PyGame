@@ -37,7 +37,7 @@ class Player(object):
         self.name = "Dudeguy McAwesomesauce"
         self.equipped = {}
 
-        for treasure in TREASURE_TYPES:
+        for treasure in EQUIPMENT_TYPES:
             self.equipped[treasure] = None
 
     @property
