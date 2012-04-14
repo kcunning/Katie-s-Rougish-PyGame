@@ -35,7 +35,15 @@ class GameScreen(object):
         self.stats_screen = self.small_font.render("Level: " + str(player_stats.level), True, color, BLACK)
         self.screen.blit(self.stats_screen, (1008, 15))
         self.stats_screen = self.small_font.render("HP: %s/%s" % (str(player_stats.current_hp), str(player_stats.max_hp)), True, color, BLACK)
-        self.screen.blit(self.stats_screen, (1008, 30)) 
+        self.screen.blit(self.stats_screen, (1008, 30))
+        line = 30
+        for stat in STATS:
+            self.stats_screen = self.small_font.render("%s: %s" % (stat, str(player_stats.stats[stat])), True, color, BLACK)
+            self.screen.blit(self.stats_screen, (1008, line+15))
+            line += 15
+        self.stats_screen = self.small_font.render("Armor: %s" % player_stats.get_armor(), True, color, BLACK)
+        self.screen.blit(self.stats_screen, (1008, line))
+        line += 15
 
     def draw_alert(self, alert, color=WHITE):
         ''' Draws the alert box at the bottom 

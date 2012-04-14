@@ -12,7 +12,7 @@ class Combat(object):
 	def fight(self):
 		'''For now, we'll always start with the player.'''
 		# Player, try to hit the monster!
-		hit_attempt = randint(0, self.player.attack)
+		hit_attempt = randint(0, self.player.get_attack())
 		if hit_attempt == 0:
 			pass
 		if hit_attempt > 0 and hit_attempt <= self.monster.defense:
@@ -26,8 +26,8 @@ class Combat(object):
 			hit_attempt = randint(0, self.monster.attack)
 			if hit_attempt == 0:
 				pass
-			if hit_attempt > 0 and hit_attempt <= self.player.defense:
+			if hit_attempt > 0 and hit_attempt <= self.player.get_defense():
 				pass
-			if hit_attempt > self.player.defense:
+			if hit_attempt > self.player.get_defense():
 				damage = self.monster.get_attack()
 				self.player.receive_damage(damage)

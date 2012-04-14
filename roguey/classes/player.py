@@ -30,10 +30,12 @@ class Player(object):
     """The player class. Contains level, HP, stats, and deals with combat."""
     def __init__(self):
         self.level = 1
-        self.attack = 5
-        self.defense = 5
+        self.stats = {
+            'strength': 1,
+            'attack': 5,
+            'defense': 5
+        }
         self.current_hp = 10
-        self.strength = 1
         self.name = "Dudeguy McAwesomesauce"
         self.equipped = {}
 
@@ -46,7 +48,17 @@ class Player(object):
 
     @property
     def get_defense(self):
-        return 1
+        return self.stats['defense'] + self.get_armor()
+
+    def get_armor(self):
+        armor = 0
+        for slot in self.equipped.keys():
+            try:
+                armor += self.equipped[slot].armor
+            except:
+                pass
+        print armor
+        return armor
 
     def receive_damage(self, damage):
         self.current_hp -= damage
@@ -55,7 +67,7 @@ class Player(object):
         pass
 
     def get_attack(self):
-        return self.strength
+        return self.stats['attack']
 
     def equip_item(self, item):
         self.equipped[item.type] = item

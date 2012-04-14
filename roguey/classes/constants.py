@@ -21,3 +21,5 @@ for treasure in EQUIPMENT_TYPES:
 TREASURE_TYPES = ('hat', 'shirt', 'pants', 'shoes', 'back', 'neck', 'hands', 'weapon', 'trash')
 
 IMG_DIR = dirname(dirname(abspath(__file__))) + "/images/"
+
+STATS = ('strength', 'attack', 'defense')
