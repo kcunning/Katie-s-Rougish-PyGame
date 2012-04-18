@@ -58,7 +58,7 @@ class Game(object):
         if self.map.has_wall(row, col):
             return
         if self.map.has_monster(row, col):
-            Combat(self.player_stats, self.map.monsters[row/TILE_SIZE][col/TILE_SIZE]).fight()
+            Combat(self.player_stats, self.map.monsters[row/TILE_SIZE][col/TILE_SIZE])
             if self.map.monsters[row/TILE_SIZE][col/TILE_SIZE].current_hp <= 0:
                 pass #put death throes here
             if self.player_stats.current_hp <= 0:

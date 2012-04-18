@@ -8,10 +8,12 @@ class Combat(object):
 	def __init__(self, player, monster):
 		self.player = player
 		self.monster = monster
+		self.fight()
 
 	def fight(self):
 		'''For now, we'll always start with the player.'''
 		# Player, try to hit the monster!
+		print self.player
 		hit_attempt = randint(0, self.player.get_attack())
 		if hit_attempt == 0:
 			pass
