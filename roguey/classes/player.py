@@ -47,7 +47,7 @@ class Player(object):
         return 10 + (self.level-1)*5
 
     @property
-    def get_defense(self):
+    def defense(self):
         return self.stats['defense'] + self.get_armor()
 
     def get_armor(self):
@@ -57,7 +57,6 @@ class Player(object):
                 armor += self.equipped[slot].armor
             except:
                 pass
-        print armor
         return armor
 
     def receive_damage(self, damage):
