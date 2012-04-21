@@ -32,7 +32,7 @@ class Player(object):
         self.level = 1
         self.stats = {
             'strength': 1,
-            'attack': 5,
+            'attack': 1,
             'defense': 5
         }
         self.current_hp = 10
@@ -65,8 +65,12 @@ class Player(object):
     def attempt_block(self, attack):
         pass
 
-    def get_attack(self):
-        return self.stats['attack']
+    @property
+    def attack(self):
+        atk = 0
+        if self.equipped['hands']:
+            atk += self.equipped['hands'].attack
+        return self.stats['attack'] + atk
 
     def equip_item(self, item):
         self.equipped[item.type] = item
