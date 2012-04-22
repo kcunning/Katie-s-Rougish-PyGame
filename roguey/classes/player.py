@@ -53,10 +53,8 @@ class Player(object):
     def get_armor(self):
         armor = 0
         for slot in self.equipped.keys():
-            try:
-                armor += self.equipped[slot].armor
-            except:
-                pass
+            if self.equipped[slot]:
+                armor += self.equipped[slot].stats['armor']
         return armor
 
     def receive_damage(self, damage):
@@ -68,8 +66,8 @@ class Player(object):
     @property
     def attack(self):
         atk = 0
-        if self.equipped['hands']:
-            atk += self.equipped['hands'].attack
+        if self.equipped['weapon']:
+            atk += self.equipped['weapon'].stats['attack']
         return self.stats['attack'] + atk
 
     def equip_item(self, item):

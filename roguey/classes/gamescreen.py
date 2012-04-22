@@ -38,7 +38,11 @@ class GameScreen(object):
         self.screen.blit(self.stats_screen, (1008, 30))
         line = 30
         for stat in STATS:
-            self.stats_screen = self.small_font.render("%s: %s" % (stat, str(player_stats.stats[stat])), True, color, BLACK)
+            if hasattr(player_stats, stat):
+                s = str(getattr(player_stats, stat))
+            else:
+                s = str(player_stats.stats[stat])
+            self.stats_screen = self.small_font.render("%s: %s" % (stat, s), True, color, BLACK)
             self.screen.blit(self.stats_screen, (1008, line+15))
             line += 15
         self.stats_screen = self.small_font.render("Armor: %s" % player_stats.get_armor(), True, color, BLACK)

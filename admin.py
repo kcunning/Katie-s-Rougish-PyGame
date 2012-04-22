@@ -24,7 +24,15 @@ class Admin(object):
 		type = TREASURE_TYPES[int(choice)-1]
 		title = raw_input("Give it a title: ")
 		desc = raw_input("Give it a description: ")
-		tr = Treasure(title=title, description=desc, type=type)
+		attack = 0
+		armor = 0
+		if type == 'weapon':
+			attack = raw_input("How much damage will it add? [1-999]: ")
+			attack = int(attack)
+		else:
+			armor = raw_input("How much armor will it add? [1-999]: ")
+			armor = int(armor)
+		tr = Treasure(title=title, description=desc, type=type, armor=armor, attack=attack)
 		self.treasures.append(tr)
 
 	def list_treasures(self):
@@ -41,6 +49,7 @@ class Admin(object):
 			print "1. Make a new treasure"
 			print "2. List current treasures"
 			print "3. Delete a treasure"
+			print "4. Edit a treasure"
 			print "0. Quit"
 			c = raw_input("Make a choice [1-2, 0]: ")
 			if c[0] == "1": self.new_treasure()

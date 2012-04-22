@@ -11,7 +11,9 @@ class Treasure(object):
         self.title = title
         self.description = description
         self.type = type
-        self.armor = armor
-        self.buff = buff
-        self.attack = attack
+        self.stats = {
+        	'armor': armor,
+        	'buff': {},
+        	'attack': attack
+        }
 

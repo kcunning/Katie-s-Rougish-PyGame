@@ -26,10 +26,21 @@ class Derpy(Monster):
 		self.title = "Derpy Slime"
 		self.level = 1
 		self.stats ={
-			'attack': 10,
+			'attack': 5,
 			'defense': 1,
 			'strength': 1,
 		}
-		self.current_hp = 5
-		self.max_hp = 5
+		self.current_hp = 3
+		self.max_hp = 3
 		
+class RatBird(Monster):
+	def __init__(self):
+		self.title = "Ratbird"
+		self.level = 2
+		self.stats = {
+			'attack': 7,
+			'defense': 2,
+			'strength': 2,
+		}
+		self.max_hp = 5
+		self.current_hp = self.max_hp
