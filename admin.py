@@ -1,62 +1,106 @@
-import sys, pickle
+import sys
+import xml.etree.ElementTree as etree
+from xml.dom.minidom import parseString
 
 sys.path.append("roguey/classes")
 
 from items import Treasure
 from constants import *
 
+def prettify(element):
+	# Helper function to make XML look more prettier
+    txt = etree.tostring(element)
+    return parseString(txt).toprettyxml()
 
 class Admin(object):
 	def __init__(self):
-		f = open("roguey/resources/items.pk")
-		try:
-			self.treasures = pickle.load(f)
-		except:
-			print "No treasures!"
-			self.treasures = []
+		# Load the existing treasures
+		f = open("roguey/resources/items.xml")
+		self.treasures = etree.fromstring(f.read())
 		f.close()
-		self.main()
+		# Load the list of treasure type templates
+		f = open("roguey/resources/item_templates.xml")
+		self.treasure_templates = etree.fromstring(f.read())
+		f.close()
+		# Enter main loop
+		self.running = True
+		self.main()		
 
 	def new_treasure(self):
-		for treasure in TREASURE_TYPES:
-			print "%s. %s" % (TREASURE_TYPES.index(treasure)+1, treasure)
-		choice = raw_input("Pick a type [1-9]: ")
-		type = TREASURE_TYPES[int(choice)-1]
+		item_attributes = {}
+
+		template_options = [
+			template.find("item_type").text for template in self.treasure_templates
+		]
+
+		# Gather the mandatory attributes
+		selection = self.prompt_for_selection(
+			prompt="Choose an item type",
+			options=template_options
+		)
+		item_type = template_options[selection]
+		template = self.treasure_templates[selection]
+
 		title = raw_input("Give it a title: ")
-		desc = raw_input("Give it a description: ")
-		attack = 0
-		armor = 0
-		if type == 'weapon':
-			attack = raw_input("How much damage will it add? [1-999]: ")
-			attack = int(attack)
-		else:
-			armor = raw_input("How much armor will it add? [1-999]: ")
-			armor = int(armor)
-		tr = Treasure(title=title, description=desc, type=type, armor=armor, attack=attack)
-		self.treasures.append(tr)
+		description = raw_input("Give it a description: ")
+
+		# Check if this template requires any additional attributes
+		for attr in template:
+			if attr.tag == "item_type":
+				continue
+			prompt = attr.attrib["prompt"]
+			try:
+				value_type = attr.attrib["type"]
+				item_attributes[attr.tag] = raw_input("%s (%s): " % (prompt, value_type))
+			except KeyError:
+				item_attributes[attr.tag] = raw_input("%s: " % prompt)
+
+		# finally we can add this new item to the list
+		new_item = etree.SubElement(self.treasures, "item")
+		etree.SubElement(new_item, "item_type").text = item_type
+		etree.SubElement(new_item, "title").text = title
+		etree.SubElement(new_item, "description").text = description
+		for attrib, value in item_attributes.iteritems():
+			etree.SubElement(new_item, attrib).text = value
 
 	def list_treasures(self):
 		for treasure in self.treasures:
-			print treasure.title
+			print treasure.find('title').text.strip()
 
-	def save(self):
-		f = open("roguey/resources/items.pk", "w")
-		pickle.dump(self.treasures, f)
+	def save_and_quit(self):
+		f = open("roguey/resources/items.xml", "w")
+		f.write(prettify(self.treasures))
 		f.close()
+		self.running = False
+
+	def delete_treasure(self):
+		pass
 
 	def main(self):
-		while 1:
-			print "1. Make a new treasure"
-			print "2. List current treasures"
-			print "3. Delete a treasure"
-			print "4. Edit a treasure"
-			print "0. Quit"
-			c = raw_input("Make a choice [1-2, 0]: ")
-			if c[0] == "1": self.new_treasure()
-			if c[0] == "2": self.list_treasures()
-			if c[0] == "0": 
-				self.save()
-				return
+		menu_options_with_actions = [
+			("Make a new treasure", self.new_treasure),
+			("List current treasures", self.list_treasures),
+			("Delete a treasure", self.delete_treasure),
+			("Quit", self.save_and_quit),
+		]
+		menu_options = [x[0] for x in menu_options_with_actions]
+		menu_prompt = "Make a choice"
+
+		while self.running:
+			selection = self.prompt_for_selection(menu_prompt, menu_options)
+			# Call the appropriate action based on the user selection
+			menu_options_with_actions[selection][1]()
+
+	def prompt_for_selection(self, prompt, options):
+		"""Given a list of options and a prompt,
+		get the users selection and return the index of the selected option
+		"""
+		# Print out the numbered options
+		for i, option in enumerate(options):
+			print "%3s. %s" % (i+1, option)
+		# Get the users selection
+		selection = raw_input("%s: " % prompt)
+		return int(selection)-1
 
 if __name__ == "__main__":
 	a = Admin()
