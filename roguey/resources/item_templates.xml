@@ -1,0 +1,39 @@
+<?xml version="1.0" ?>
+<item_templates>
+	<item>
+		<item_type>hat</item_type>
+	</item>
+	<item>
+		<item_type>shirt</item_type>
+	</item>
+	<item>
+		<item_type>pants</item_type>
+	</item>
+	<item>
+		<item_type>shoes</item_type>
+	</item>
+	<item>
+		<item_type>back</item_type>
+	</item>
+	<item>
+		<item_type>neck</item_type>
+	</item>
+	<item>
+		<item_type>hands</item_type>
+	</item>
+	<item>
+		<item_type>weapon</item_type>
+		<damage type="int" prompt="How much damage does this weapon do?" />
+	</item>
+	<item>
+		<item_type>armor</item_type>
+		<armor type="int" prompt="How much armor does this item add?" />
+	</item>
+	<item>
+		<item_type>trash</item_type>
+	</item>
+	<item>
+		<item_type>wand</item_type>
+		<damage type="int" prompt="How much damage does this wand do?" />
+		<charges type="int" prompt="How many charges does this wand start with?" />
+</item_templates>
