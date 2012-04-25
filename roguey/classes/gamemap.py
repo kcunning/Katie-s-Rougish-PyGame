@@ -2,6 +2,7 @@
 import pygame, math, sys, random, pickle
 from pygame.locals import *
 from random import randint, choice
+import xml.etree.ElementTree as etree
 
 from constants import *
 from items import Treasure
@@ -46,8 +47,9 @@ class Map(object):
         self.fill_map()
 
     def get_all_treasures(self):
-        f = open("roguey/resources/items.pk")
-        treasures = pickle.load(f)
+        f = open("roguey/resources/items.xml")
+        root = etree.fromstring(f.read())
+        treasures = [Treasure.from_xml(t) for t in root]
         f.close()
         return treasures
 

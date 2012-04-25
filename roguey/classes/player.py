@@ -15,9 +15,9 @@ class Inventory(object):
     def add_to_inventory(self, item, player):
         ''' Adds an item to the inventory
         '''
-        if item.type == "trash":
+        if item.item_type == "trash":
             return
-        if player.equipped[item.type]:
+        if player.equipped[item.item_type ]:
             try:
                 self.inventory[item] += 1
             except:
@@ -73,7 +73,7 @@ class Player(object):
         return self.stats['attack'] + atk
 
     def equip_item(self, item):
-        self.equipped[item.type] = item
+        self.equipped[item.item_type] = item
 
 
         

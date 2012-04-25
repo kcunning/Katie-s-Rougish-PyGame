@@ -1,0 +1,30 @@
+<?xml version="1.0" ?>
+<items>
+	
+
+	<item>
+		<item_type>
+			hat
+		</item_type>
+		<title>
+			Hat of Holding
+		</title>
+		<description>
+			There appears to be something in here...
+		</description>
+	</item>
+	<item>
+		<item_type>
+			weapon
+		</item_type>
+		<title>
+			Breadknife of Cleaving
+		</title>
+		<description>
+			Look out -- it's sharp!
+		</description>
+		<damage>
+			10
+		</damage>
+	</item>
+</items>
