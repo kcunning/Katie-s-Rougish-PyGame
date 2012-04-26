@@ -1,7 +1,5 @@
 <?xml version="1.0" ?>
 <items>
-	
-
 	<item>
 		<item_type>
 			hat
@@ -23,8 +21,33 @@
 		<description>
 			Look out -- it's sharp!
 		</description>
-		<damage>
+		<damage type="int">
 			10
 		</damage>
+	</item>
+	<item>
+		<item_type>
+			pants
+		</item_type>
+		<title>
+			Pants of Breathing
+		</title>
+		<description>
+			No magical powers, but they are made of natural fibre.
+		</description>
+	</item>
+	<item>
+		<item_type>
+			shoes
+		</item_type>
+		<title>
+			Mithral Moccasins
+		</title>
+		<description>
+			Protection _and_ comfort!
+		</description>
+		<armor type="int">
+			3
+		</armor>
 	</item>
 </items>

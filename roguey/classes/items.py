@@ -40,10 +40,11 @@ class Treasure(object):
                     value = {
                         "int": int,
                         "float": float,
+                        "string": str,
                     }[attr_type](value)
                 except KeyError:
                     print "%s attribute has illegal 'type' attribute '%d'"
-                    print "Supported conversion types: 'int', 'float'"
+                    print "Supported conversion types: 'int', 'float', 'string'"
 
             attribs[attribute] = value
 
