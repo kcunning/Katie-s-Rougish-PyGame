@@ -18,6 +18,11 @@ class Admin(object):
 		f = open("roguey/resources/items.xml")
 		self.treasures = etree.fromstring(f.read())
 		f.close()
+		# trim the annoying whitespace...
+		self.treasures.text = ""
+		for element in self.treasures.iter():
+			element.text = element.text.strip()
+			element.tail = ""
 		# Load the list of treasure type templates
 		f = open("roguey/resources/item_templates.xml")
 		self.treasure_templates = etree.fromstring(f.read())
@@ -27,7 +32,7 @@ class Admin(object):
 		self.main()		
 
 	def new_treasure(self):
-		item_attributes = {}
+		item_attributes = {}  # This will hold optional stats only.
 
 		template_options = [
 			template.find("item_type").text for template in self.treasure_templates
@@ -49,11 +54,8 @@ class Admin(object):
 			if attr.tag == "item_type":
 				continue
 			prompt = attr.attrib["prompt"]
-			try:
-				value_type = attr.attrib["type"]
-				item_attributes[attr.tag] = raw_input("%s (%s): " % (prompt, value_type))
-			except KeyError:
-				item_attributes[attr.tag] = raw_input("%s: " % prompt)
+			value_type = attr.attrib.get("type", "string")  # type defaults to "string" if not specified
+			item_attributes[attr.tag] = (raw_input("%s (%s): " % (prompt, value_type)), value_type)
 
 		# finally we can add this new item to the list
 		new_item = etree.SubElement(self.treasures, "item")
@@ -61,7 +63,8 @@ class Admin(object):
 		etree.SubElement(new_item, "title").text = title
 		etree.SubElement(new_item, "description").text = description
 		for attrib, value in item_attributes.iteritems():
-			etree.SubElement(new_item, attrib).text = value
+			optional_stat = etree.SubElement(new_item, attrib)
+			optional_stat.text, optional_stat.attrib["type"] = value
 
 	def list_treasures(self):
 		for treasure in self.treasures:
