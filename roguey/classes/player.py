@@ -50,11 +50,29 @@ class Player(object):
     def defense(self):
         return self.stats['defense'] + self.get_armor()
 
+    @property
+    def strength(self):
+        return self.stats['strength']
+
     def get_armor(self):
         armor = 0
         for slot in self.equipped.keys():
             if self.equipped[slot]:
-                armor += self.equipped[slot].stats['armor']
+                try:
+                    armor += self.equipped[slot].armor
+                except AttributeError:
+                    # The Treasure in this slot doesn't have an 'armor' attribute
+                    pass
+                except TypeError:
+                    # The Treasure in this slot has an armor stat, however it
+                    # appears to be a non numeric type. Make sure this Treasures armor stat
+                    # has the attribute type="int" in its XML definition.
+                    # This sort of error should probably get properly logged somewhere
+                    print (
+                        'Please make sure the armor stat for the "%s" weapon '
+                        'has the type="int" attribute in its XML definition' % self.equipped[slot].title
+                    )
+
         return armor
 
     def receive_damage(self, damage):
@@ -67,7 +85,21 @@ class Player(object):
     def attack(self):
         atk = 0
         if self.equipped['weapon']:
-            atk += self.equipped['weapon'].stats['attack']
+            try:
+                atk += self.equipped['weapon'].damage
+            except AttributeError:
+                # This weapon does not have a "damage" attribute. This may not
+                # be an error; it may just suck.
+                pass
+            except TypeError:
+                # The weapon has a damage attribute, however it
+                # appears to be non numeric type. Make sure this damage stat
+                # has the attribute type="int" in its XML definition.
+                # This sort of error should probably get properly logged somewhere
+                print (
+                    'Please make sure the armor stat for the "%s" weapon '
+                    'has the type="int" attribute in its XML definition' % self.equipped['weapon'].title
+                )
         return self.stats['attack'] + atk
 
     def equip_item(self, item):
