@@ -74,6 +74,8 @@ class Game(object):
             self.add_treasure(treasure)
             self.screen.draw_inventory(self.inventory)
             self.screen.draw_equipment(self.player_stats.equipped)
+
+    def refresh_screen(self):
         self.screen.draw_player(self.map.player)
         self.screen.draw_screen_layers(self.map, self.player_stats)
 
@@ -92,8 +94,8 @@ class Game(object):
         while 1:
             self.clock.tick(30)
             for event in pygame.event.get():
-                if not hasattr(event, 'key'): 
-                    continue
+                if event.type == QUIT:
+                    sys.exit(0)
                 if event.type == KEYDOWN:
                     if event.key == K_ESCAPE: 
                         sys.exit(0)
@@ -110,7 +112,10 @@ class Game(object):
                         vert = TILE_SIZE
                         hor = 0
                 if event.type == KEYUP:
-                    self.move(hor, vert)
-                    self.map.move_monsters()
-                    hor = 0
-                    vert = 0
+                    # updates only occur is player has moved.
+                    if vert or hor:
+                        self.move(hor, vert)
+                        self.map.move_monsters()
+                        hor = 0
+                        vert = 0    
+            self.refresh_screen()
