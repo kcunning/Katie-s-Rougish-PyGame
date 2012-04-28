@@ -1,53 +1,25 @@
 <?xml version="1.0" ?>
 <items>
 	<item>
-		<item_type>
-			hat
-		</item_type>
-		<title>
-			Hat of Holding
-		</title>
-		<description>
-			There appears to be something in here...
-		</description>
+		<item_type>hat</item_type>
+		<title>Hat of Holding</title>
+		<description>There appears to be something in here...</description>
 	</item>
 	<item>
-		<item_type>
-			weapon
-		</item_type>
-		<title>
-			Breadknife of Cleaving
-		</title>
-		<description>
-			Look out -- it's sharp!
-		</description>
-		<damage type="int">
-			10
-		</damage>
+		<item_type>weapon</item_type>
+		<title>Breadknife of Cleaving</title>
+		<description>Look out -- it's sharp!</description>
+		<damage type="int">10</damage>
 	</item>
 	<item>
-		<item_type>
-			pants
-		</item_type>
-		<title>
-			Pants of Breathing
-		</title>
-		<description>
-			No magical powers, but they are made of natural fibre.
-		</description>
+		<item_type>pants</item_type>
+		<title>Pants of Breathing</title>
+		<description>No magical powers, but they are made of natural fibre.</description>
 	</item>
 	<item>
-		<item_type>
-			shoes
-		</item_type>
-		<title>
-			Mithral Moccasins
-		</title>
-		<description>
-			Protection _and_ comfort!
-		</description>
-		<armor type="int">
-			3
-		</armor>
+		<item_type>shoes</item_type>
+		<title>Mithral Moccasins</title>
+		<description>Protection _and_ comfort!</description>
+		<armor type="int">3</armor>
 	</item>
 </items>

@@ -76,15 +76,32 @@ class Admin(object):
 		f.close()
 		self.running = False
 
+	def quit_without_save(self):
+		is_sure_about_quitting = self.yes_no_prompt(
+			"Are you super sure you want to quit without saving?"
+		)
+		if is_sure_about_quitting:
+			self.running = False
+
 	def delete_treasure(self):
-		pass
+		options = [element.find('title').text for element in self.treasures]
+		prompt = "Select a treasure to delete: "
+		selection = self.prompt_for_selection(prompt, options)
+		confirmation_prompt = (
+			'Do you really want to delete "%s"?'
+			% options[selection]
+			)
+		sure_about_deleting = self.yes_no_prompt(confirmation_prompt)
+		if sure_about_deleting:
+			self.treasures.remove(self.treasures[selection])
 
 	def main(self):
 		menu_options_with_actions = [
 			("Make a new treasure", self.new_treasure),
 			("List current treasures", self.list_treasures),
 			("Delete a treasure", self.delete_treasure),
-			("Quit", self.save_and_quit),
+			("Save and quit", self.save_and_quit),
+			("Quit without saving", self.quit_without_save)
 		]
 		menu_options = [x[0] for x in menu_options_with_actions]
 		menu_prompt = "Make a choice"
@@ -98,12 +115,46 @@ class Admin(object):
 		"""Given a list of options and a prompt,
 		get the users selection and return the index of the selected option
 		"""
+		retval = None
 		# Print out the numbered options
 		for i, option in enumerate(options):
 			print "%3s. %s" % (i+1, option)
-		# Get the users selection
-		selection = raw_input("%s: " % prompt)
-		return int(selection)-1
+		# Continue to prompt user until valid input is recieved.
+		while retval == None:
+			# Get the users selection
+			selection = raw_input("%s: " % prompt)
+			# Check that the input is valid integer
+			try:
+				retval = int(selection) - 1
+			except ValueError:
+				print "Invalid input. Please enter a number."
+				continue
+			# Ensure input is within the valid range
+			if retval < 0 or retval >= len(options):
+				print ("Please enter a number between 1 and %d inclusive." 
+					% len(options))
+				retval = None  # reset the illegal value
+				continue
+		return retval
+
+	def yes_no_prompt(self, prompt):
+		'''Prompt for a yes/no answer. 
+		Will accept any response beginning with Y, N, y or n.
+		Returns a bool.'''
+		retval = None
+		selection = raw_input("%s (Y/N): " % prompt)
+		# Continue to prompt user until valid input starts with "Y" or "N".
+		while retval == None:
+			first_letter = selection.strip()[0].upper()
+			try:
+				retval = {
+					"Y": True,
+					"N": False
+				}[first_letter]
+			except KeyError:
+				pass
+		return retval
+
 
 if __name__ == "__main__":
 	a = Admin()
