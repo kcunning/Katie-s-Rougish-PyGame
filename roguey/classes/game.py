@@ -110,7 +110,9 @@ class Game(object):
                         vert = TILE_SIZE
                         hor = 0
                 if event.type == KEYUP:
-                    self.move(hor, vert)
-                    self.map.move_monsters()
-                    hor = 0
-                    vert = 0
+                    # updates only occur is player has moved.
+                    if vert or hor:
+                        self.move(hor, vert)
+                        self.map.move_monsters()
+                        hor = 0
+                        vert = 0
