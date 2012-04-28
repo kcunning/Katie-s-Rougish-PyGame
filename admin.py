@@ -84,7 +84,16 @@ class Admin(object):
 			self.running = False
 
 	def delete_treasure(self):
-		pass
+		options = [element.find('title').text for element in self.treasures]
+		prompt = "Select a treasure to delete: "
+		selection = self.prompt_for_selection(prompt, options)
+		confirmation_prompt = (
+			'Do you really want to delete "%s"?'
+			% options[selection]
+			)
+		sure_about_deleting = self.yes_no_prompt(confirmation_prompt)
+		if sure_about_deleting:
+			self.treasures.remove(self.treasures[selection])
 
 	def main(self):
 		menu_options_with_actions = [
