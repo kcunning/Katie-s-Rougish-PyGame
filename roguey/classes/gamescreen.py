@@ -7,11 +7,13 @@ class GameScreen(object):
     def __init__(self):
         ''' Does the initial drawing of the game screen.
         '''
+        self.selected_tile = [0, 0]
         self.screen = pygame.display.set_mode((1280, 832))
         self.font = pygame.font.SysFont(None, 48)
         self.small_font = pygame.font.SysFont(None, 20)
         self.bg = pygame.image.load(IMG_DIR + 'rainbowbg.png')
         self.player_blit = pygame.image.load(IMG_DIR + 'dude.png')
+        self.selection_blit = pygame.image.load(IMG_DIR + 'selection.png')
         self.screen.blit(self.bg, (0,0))
         self.inventory_screen = self.small_font.render("Inventory", True, WHITE, BLACK)
         self.equipment_screen = self.small_font.render("Equipment", True, WHITE, BLACK)
@@ -146,6 +148,25 @@ class GameScreen(object):
         '''
         self.screen.blit(self.bg, (0,0))
 
+    def draw_selection_square(self):
+        '''Draw a selection square at the current mouse position
+        '''
+        mouse_pos = pygame.mouse.get_pos()
+        self.selected_tile = [c / TILE_SIZE for c in mouse_pos]
+        selection_pos = [c * TILE_SIZE for c in self.selected_tile]
+        self.screen.blit(self.selection_blit, selection_pos)
+
+    def draw_selected_square_info(self, map):
+        '''Draw some info regarding the contents of the currently selected square'''
+        x, y = self.selected_tile
+        try:
+            if map.monsters[x][y]:
+                self.stats_screen = self.small_font.render(str(map.monsters[x][y]), True, (0, 255, 0, 255))
+                self.screen.blit(self.stats_screen, (0, 0))
+        except IndexError:
+            # mouse probably off the map
+            pass
+
     def draw_screen_layers(self, map, player_stats):
         ''' Draws the layers of the game screen
         '''
@@ -157,6 +178,8 @@ class GameScreen(object):
         #self.draw_darkness(map)
         self.draw_stats(player_stats=player_stats)
         self.draw_player(coord=map.player)
+        self.draw_selection_square()
+        self.draw_selected_square_info(map)
         pygame.display.flip()
 
     def animate_move(self, hor, vert, blit):
