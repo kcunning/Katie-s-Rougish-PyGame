@@ -21,6 +21,20 @@ class Monster(object):
 	def strength(self):
 		return self.stats['strength']
 
+	def __str__(self):
+		return (
+			"%s | Level %d | HP (%d/%d) | attack %d | defense %d | strength %d" %
+			(
+				self.title,
+				self.level,
+				self.current_hp,
+				self.max_hp,
+				self.stats['attack'],
+				self.stats['defense'],
+				self.stats['strength']
+				)
+			)
+
 class Derpy(Monster):
 	def __init__(self):
 		self.title = "Derpy Slime"
