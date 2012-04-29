@@ -1,4 +1,4 @@
-from os.path import abspath, dirname
+from os.path import abspath, dirname, join, sep
 
 MOVEMENT_SIZE = 12
 RADIUS = 2
@@ -20,6 +20,9 @@ for treasure in EQUIPMENT_TYPES:
 
 TREASURE_TYPES = ('hat', 'shirt', 'pants', 'shoes', 'back', 'neck', 'hands', 'weapon', 'trash')
 
-IMG_DIR = dirname(dirname(abspath(__file__))) + "/images/"
+IMG_DIR = join(
+	dirname(dirname(abspath(__file__))),
+	"images"
+	) + sep
 
 STATS = ('strength', 'attack', 'defense')
