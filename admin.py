@@ -1,8 +1,9 @@
 import sys
+import os
 import xml.etree.ElementTree as etree
 from xml.dom.minidom import parseString
 
-sys.path.append("roguey/classes")
+sys.path.append(os.path.join("roguey", "classes"))
 
 from items import Treasure
 from constants import *
@@ -15,7 +16,13 @@ def prettify(element):
 class Admin(object):
 	def __init__(self):
 		# Load the existing treasures
-		f = open("roguey/resources/items.xml")
+		f = open(
+			os.path.join(
+				"roguey",
+				"resources",
+				"items.xml",
+				)
+			)
 		self.treasures = etree.fromstring(f.read())
 		f.close()
 		# trim the annoying whitespace...
@@ -24,7 +31,13 @@ class Admin(object):
 			element.text = element.text.strip()
 			element.tail = ""
 		# Load the list of treasure type templates
-		f = open("roguey/resources/item_templates.xml")
+		f = open(
+			os.path.join(
+				"roguey",
+				"resources",
+				"item_templates.xml",
+				)
+			)
 		self.treasure_templates = etree.fromstring(f.read())
 		f.close()
 		# Enter main loop

@@ -13,7 +13,11 @@ class GameScreen(object):
         self.small_font = pygame.font.SysFont(None, 20)
         self.bg = pygame.image.load(IMG_DIR + 'rainbowbg.png')
         self.player_blit = pygame.image.load(IMG_DIR + 'dude.png')
+        self.monster_blit = pygame.image.load(IMG_DIR + 'dumb_monster.png')
         self.selection_blit = pygame.image.load(IMG_DIR + 'selection.png')
+        self.treasure_blit = pygame.image.load(IMG_DIR + 'chest.png')
+        self.wall_tile = pygame.image.load(IMG_DIR + 'wall.png')
+        self.floor_tile = pygame.image.load(IMG_DIR + 'floor.png')
         self.screen.blit(self.bg, (0,0))
         self.inventory_screen = self.small_font.render("Inventory", True, WHITE, BLACK)
         self.equipment_screen = self.small_font.render("Equipment", True, WHITE, BLACK)
@@ -106,8 +110,9 @@ class GameScreen(object):
         for row in range(ROWS):
             for col in range(COLUMNS):
                 if treasure_map[row][col] != 0:
-                    treasure = pygame.image.load(IMG_DIR + 'chest.png')
-                    self.screen.blit(treasure, (row*TILE_SIZE, col*TILE_SIZE))
+                    self.screen.blit(
+                        self.treasure_blit,
+                        (row*TILE_SIZE, col*TILE_SIZE))
     
     def draw_monsters(self, map):
         ''' Draws monsters that appear in the area that the rogue can see
@@ -116,17 +121,17 @@ class GameScreen(object):
             for col in range(COLUMNS):
                 #if map.monsters[row][col] != 0 and map.current[row][col] != 0:
                 if map.monsters[row][col] != 0:
-                    monster = pygame.image.load(IMG_DIR + 'dumb_monster.png')
-                    self.screen.blit(monster, (row*TILE_SIZE, col*TILE_SIZE))
+                    self.screen.blit(
+                        self.monster_blit,
+                        (row*TILE_SIZE, col*TILE_SIZE))
     
-    def draw_walls(self, walls, filename):
+    def draw_walls(self, walls, tile):
         ''' Draws walls on the game map
         '''
         for row in range(ROWS):
             for col in range(COLUMNS):
                 if walls[row][col] != 0:
-                    wall = pygame.image.load(IMG_DIR + filename)
-                    self.screen.blit(wall, (row*TILE_SIZE, col*TILE_SIZE))
+                    self.screen.blit(tile, (row*TILE_SIZE, col*TILE_SIZE))
 
     def draw_darkness(self, map):
         ''' Draws the darkness and shadows on the board. 0 is dark, 1 is in shadows,
@@ -171,8 +176,8 @@ class GameScreen(object):
         ''' Draws the layers of the game screen
         '''
         self.draw_background()
-        self.draw_walls(map.floor, 'floor.png')
-        self.draw_walls(map.walls, 'wall.png')
+        self.draw_walls(map.floor, self.floor_tile)
+        self.draw_walls(map.walls, self.wall_tile)
         self.draw_treasure(map.treasure)
         self.draw_monsters(map)
         #self.draw_darkness(map)
