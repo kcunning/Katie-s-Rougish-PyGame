@@ -132,7 +132,7 @@ class Admin(object):
 		# Print out the numbered options
 		for i, option in enumerate(options):
 			print "%3s. %s" % (i+1, option)
-		# Continue to prompt user until valid input is recieved.
+		# Continue to prompt user until valid input is received.
 		while retval == None:
 			# Get the users selection
 			selection = raw_input("%s: " % prompt)
