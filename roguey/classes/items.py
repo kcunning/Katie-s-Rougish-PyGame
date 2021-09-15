@@ -13,14 +13,14 @@ class Treasure(object):
         self.description = description
         self.item_type = item_type
 
-        # The rest of the attibutes are optional depending on the item type
+        # The rest of the attributes are optional depending on the item type
         [setattr(self, key, value) for key, value in kwargs.iteritems()]
         
     @classmethod
     def from_xml(cls, xml):
         """
         Creates a Treasure object from an etree XML object.
-        Treasures can have abitrary attribute but must always have
+        Treasures can have arbitrary attribute but must always have
         the required attributes, 'title', 'description', 'item_type'.
         If the XML element describing a Treasure attribute has
         a "type" attribute in its XML tag, this can be used to convert
