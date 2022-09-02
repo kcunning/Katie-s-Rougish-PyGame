@@ -58,8 +58,8 @@ class Game(object):
         if self.map.has_wall(row, col):
             return
         if self.map.has_monster(row, col):
-            Combat(self.player_stats, self.map.monsters[row/TILE_SIZE][col/TILE_SIZE])
-            if self.map.monsters[row/TILE_SIZE][col/TILE_SIZE].current_hp <= 0:
+            Combat(self.player_stats, self.map.monsters[row//TILE_SIZE][col//TILE_SIZE])
+            if self.map.monsters[row//TILE_SIZE][col//TILE_SIZE].current_hp <= 0:
                 pass #put death throes here
             if self.player_stats.current_hp <= 0:
                 self.end_game()
@@ -99,19 +99,19 @@ class Game(object):
                 if event.type == KEYDOWN:
                     if event.key == K_ESCAPE: 
                         sys.exit(0)
-                    if event.key == K_LEFT:
+                    elif event.key == K_LEFT:
                         hor = -TILE_SIZE
                         vert = 0
-                    if event.key == K_RIGHT:
+                    elif event.key == K_RIGHT:
                         hor = TILE_SIZE
                         vert = 0
-                    if event.key == K_UP:
+                    elif event.key == K_UP:
                         vert = -TILE_SIZE
                         hor = 0
-                    if event.key == K_DOWN:
+                    elif event.key == K_DOWN:
                         vert = TILE_SIZE
                         hor = 0
-                if event.type == KEYUP:
+                elif event.type == KEYUP:
                     # updates only occur is player has moved.
                     if vert or hor:
                         self.move(hor, vert)

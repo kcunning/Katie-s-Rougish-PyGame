@@ -93,14 +93,18 @@ class GameScreen(object):
         '''
         self.screen.blit(self.inventory_screen, (1008, 400))
         if inventory:
-            items = inventory.get_items()
+            items = list(inventory.get_items())
         else:
             items = []
-        for i in range(items.__len__()):
+        # --- CHANGED items.__len__() to len(items) --- #
+        for i in range(len(items)):
             line = self.small_font.render(LONG_STRING, True, BLACK, BLACK)
-            self.screen.blit(line, (1008, ((i+1)*15)+400))
+            self.screen.blit(line, (1008, ((i + 1)*15)+400))
         pygame.display.flip()
+
+        # for item in len(items):
         for item in items:
+            # --- ADDED PARENTHESIS AFTER title --- #
             line = self.small_font.render(item.title, True, WHITE, BLACK)
             self.screen.blit(line, (1008, (items.index(item)+1)*15+400))
 
@@ -157,7 +161,7 @@ class GameScreen(object):
         '''Draw a selection square at the current mouse position
         '''
         mouse_pos = pygame.mouse.get_pos()
-        self.selected_tile = [c / TILE_SIZE for c in mouse_pos]
+        self.selected_tile = [c // TILE_SIZE for c in mouse_pos]
         selection_pos = [c * TILE_SIZE for c in self.selected_tile]
         self.screen.blit(self.selection_blit, selection_pos)
 
