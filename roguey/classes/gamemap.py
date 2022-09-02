@@ -205,16 +205,16 @@ class Map(object):
             return False
 
     def has_wall(self, row, col):
-        row = row/TILE_SIZE
-        col = col/TILE_SIZE
+        row = row//TILE_SIZE
+        col = col//TILE_SIZE
         if self.walls[row][col]:
             return True
         else:
             return False
 
     def has_monster(self, row, col):
-        row = row/TILE_SIZE
-        col = col/TILE_SIZE
+        row = row//TILE_SIZE
+        col = col//TILE_SIZE
         if self.monsters[row][col]:
             return True
         else:
@@ -223,8 +223,8 @@ class Map(object):
     def set_current_position(self, position):
         self.current = self.get_blank_map()
         row, col = position
-        row = row/TILE_SIZE
-        col = col/TILE_SIZE
+        row = row//TILE_SIZE
+        col = col//TILE_SIZE
         self.current[row][col] = 1
         for i in range(RADIUS):
             if row-i > 0:
@@ -246,8 +246,8 @@ class Map(object):
                 and the squares nearby to partially cleared.
         '''
         x, y = position
-        col = y/TILE_SIZE
-        row = x/TILE_SIZE
+        col = y//TILE_SIZE
+        row = x//TILE_SIZE
         
         self.cleared[row][col] = 1
         if row < ROWS-1:
@@ -271,8 +271,8 @@ class Map(object):
         ''' Given a position, clears the treasure from it, and returns the treasure.
         ''' 
         x, y = position
-        row = x/TILE_SIZE
-        col = y/TILE_SIZE
+        row = x//TILE_SIZE
+        col = y//TILE_SIZE
         treasure = self.treasure[row][col]
         self.treasure[row][col] = 0
         return treasure
@@ -281,7 +281,7 @@ class Map(object):
         ''' Prints an ascii map to the console. For troubleshooting only.
         '''
         for row in self.floor:
-            print row, row.__len__()
+            print(row, row.__len__())
 
     def move_monsters(self):
         monsters = self.get_all_monsters()

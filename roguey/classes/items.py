@@ -5,7 +5,7 @@ from pygame.locals import *
 from constants import *
 
 class Treasure(object):
-    ''' Not implemented yet. 
+    ''' Not implemented yet.
     '''
     def __init__(self, title, description, item_type, **kwargs):
         # These attributes are required for all Treasures
@@ -14,8 +14,8 @@ class Treasure(object):
         self.item_type = item_type
 
         # The rest of the attibutes are optional depending on the item type
-        [setattr(self, key, value) for key, value in kwargs.iteritems()]
-        
+        [setattr(self, key, value) for key, value in kwargs.items()]
+
     @classmethod
     def from_xml(cls, xml):
         """
@@ -43,8 +43,8 @@ class Treasure(object):
                         "string": str,
                     }[attr_type](value)
                 except KeyError:
-                    print "%s attribute has illegal 'type' attribute '%d'"
-                    print "Supported conversion types: 'int', 'float', 'string'"
+                    print("%s attribute has illegal 'type' attribute '%d'")
+                    print("Supported conversion types: 'int', 'float', 'string'")
 
             attribs[attribute] = value
 
